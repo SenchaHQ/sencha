@@ -8,7 +8,7 @@
   "author": "Johanna Johansson <anna@sencha.so>",
   "license": "AGPL-3.0",
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "scripts": {
     "build": "rimraf dist && tsc -P tsconfig.cjs.json && tsc -P tsconfig.build.json",
