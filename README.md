@@ -8,7 +8,7 @@ Sencha is an automated market maker for Solana tokens.
 
 We're in active development. For the latest updates, please join our community:
 
-- Twitter: https://twitter.com/SenchaHQ
+- Twitter: https://twitter.com/SenchaDEX
 - Chat: https://chat.sencha.so
 
 ## Note
