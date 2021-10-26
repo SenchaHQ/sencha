@@ -4,8 +4,15 @@
   "description": "SDK for the Sencha Protocol",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
-  "repository": "https://github.com/SenchaHQ/sencha-private",
-  "author": "Johanna Johansson <anna@sencha.so>",
+  "homepage": "https://github.com/SenchaHQ/sencha#readme",
+  "bugs": {
+    "url": "https://github.com/SenchaHQ/sencha/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SenchaHQ/sencha.git"
+  },
+  "author": "Johanna Johansson <jj@sencha.so>",
   "license": "AGPL-3.0",
   "publishConfig": {
     "access": "public"
