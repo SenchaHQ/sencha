@@ -1,0 +1,92 @@
+{
+  "name": "@senchahq/sencha-sdk",
+  "version": "0.7.0",
+  "description": "SDK for the Sencha Protocol",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "repository": "https://github.com/SenchaHQ/sencha-private",
+  "author": "Johanna Johansson <anna@sencha.so>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "scripts": {
+    "build": "rimraf dist && tsc -P tsconfig.cjs.json && tsc -P tsconfig.build.json",
+    "build:cjs": "tsc -P tsconfig.cjs.json",
+    "build:all": "captain build && npm run idl:generate && npm run build",
+    "build:programs": "captain build",
+    "typecheck": "tsc",
+    "test": "jest",
+    "clean": "rm -fr dist/",
+    "idl:generate": "./scripts/parse-idls.sh && ./scripts/generate-idl-types.sh",
+    "test:e2e:cp-amm": "anchor test --skip-build 'src/tests/cpAmm.spec.ts'",
+    "idl:generate:nolint": "./scripts/parse-idls.sh && RUN_ESLINT=none ./scripts/generate-idl-types.sh",
+    "lint": "eslint --cache .",
+    "lint:ci": "eslint . --max-warnings=0",
+    "test:e2e": "anchor test --skip-build",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "@babel/preset-typescript": "^7.15.0",
+    "@project-serum/anchor": "^0.18.0",
+    "@rushstack/eslint-patch": "^1.0.8",
+    "@saberhq/anchor-contrib": "^1.3.18",
+    "@saberhq/chai-solana": "^1.3.18",
+    "@saberhq/eslint-config": "^1.3.18",
+    "@saberhq/solana-contrib": "^1.3.18",
+    "@saberhq/token-utils": "^1.3.18",
+    "@solana/spl-token-registry": "^0.2.286",
+    "@solana/web3.js": "^1.30.1",
+    "@types/babel__core": "^7.1.16",
+    "@types/bn.js": "^5.1.0",
+    "@types/chai-as-promised": "^7.1.4",
+    "@types/jest": "^27.0.2",
+    "@types/lodash.mapvalues": "^4.6.6",
+    "@types/lodash.zip": "^4.2.6",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.11.6",
+    "@types/rimraf": "^3.0.2",
+    "bn.js": "^5.2.0",
+    "chai": "^4.3.4",
+    "chai-bn": "^0.3.0",
+    "eslint": "^7.32.0",
+    "eslint-import-resolver-node": "^0.3.6",
+    "eslint-plugin-import": "^2.25.2",
+    "husky": "^7.0.4",
+    "jest": "^27.3.1",
+    "jsbi": "^3.2.5",
+    "lint-staged": "^11.2.6",
+    "mocha": "9.1.3",
+    "prettier": "^2.4.1",
+    "prettier-plugin-toml": "^0.3.1",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.4"
+  },
+  "lint-staged": {
+    "*.ts": "eslint --cache --fix",
+    "*.{md,json,js,yml,yaml}": "prettier --write"
+  },
+  "dependencies": {
+    "lodash.mapvalues": "^4.6.0",
+    "lodash.zip": "^4.2.0",
+    "tiny-invariant": "^1.1.0",
+    "tslib": "^2.3.1"
+  },
+  "peerDependencies": {
+    "@project-serum/anchor": "^0.17.1-beta.1",
+    "@saberhq/anchor-contrib": "^1.3.18",
+    "@saberhq/solana-contrib": "^1.3.18",
+    "@saberhq/token-utils": "^1.3.18",
+    "@solana/web3.js": "^1.29.2",
+    "bn.js": "^5.2.0",
+    "jsbi": "^3.2.5"
+  },
+  "files": [
+    "dist/",
+    "src/"
+  ],
+  "packageManager": "yarn@3.1.0"
+}

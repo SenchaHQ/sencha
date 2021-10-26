@@ -1,0 +1,21 @@
+[package]
+name = "xyk"
+version = "0.1.0"
+description = "Constant product AMM calculator used for Sencha."
+edition = "2018"
+homepage = "https://sencha.so"
+repository = "https://github.com/SenchaHQ/sencha"
+authors = ["Johanna Johansson <jj@sencha.so>"]
+license = "AGPL-3.0"
+keywords = ["solana", "anchor", "amm", "sencha", "swap"]
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "xyk"
+
+[dependencies]
+num-traits = "0.2"
+spl-math = { version = "0.1", features = ["no-entrypoint"] }
+
+[dev-dependencies]
+proptest = { version = "1.0" }

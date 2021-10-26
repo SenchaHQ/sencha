@@ -1,0 +1,28 @@
+[package]
+name = "cpamm"
+version = "0.7.0"
+description = "Sencha constant-product automated market maker."
+edition = "2018"
+homepage = "https://sencha.so"
+repository = "https://github.com/SenchaHQ/sencha"
+authors = ["Johanna Johansson <jj@sencha.so>"]
+license = "AGPL-3.0"
+keywords = ["solana", "anchor", "amm", "sencha", "swap"]
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "cpamm"
+
+[features]
+no-entrypoint = []
+no-idl = []
+cpi = ["no-entrypoint"]
+default = []
+
+[dependencies]
+anchor-lang = "0.17.0"
+anchor-spl = "0.17.0"
+num-traits = "0.2"
+vipers = "1.2.1"
+spl-associated-token-account = "1.0.3"
+xyk = { path = "../../lib/xyk", version = "0.1.0" }

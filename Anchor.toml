@@ -1,0 +1,21 @@
+[registry]
+url = "https://anchor.projectserum.com"
+
+[provider]
+cluster = "localnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "yarn mocha src/tests/**/*.spec.ts"
+
+[programs.localnet]
+cpamm = "SCHAtsf8mbjyjiv4LkhLKutTf6JnZAbdJKFkXQNMFHZ"
+
+[programs.testnet]
+cpamm = "SCHAtsf8mbjyjiv4LkhLKutTf6JnZAbdJKFkXQNMFHZ"
+
+[programs.devnet]
+cpamm = "SCHAtsf8mbjyjiv4LkhLKutTf6JnZAbdJKFkXQNMFHZ"
+
+[programs.mainnet]
+cpamm = "SCHAtsf8mbjyjiv4LkhLKutTf6JnZAbdJKFkXQNMFHZ"

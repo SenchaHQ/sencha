@@ -1,0 +1,13 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc a65a23f76da465362b30781b17a6cbcda504c23dc1a2086209c1e4ce4d6162f7 # shrinks to pool_token_amount = 2, pool_token_supply = 1, swap_token_a_amount = 6148914691236517206, swap_token_b_amount = 1
+cc 25bd74114605279f5b936abba08cb12a118d686ce50efba6d6c477d7d8e62277 # shrinks to (pool_token_supply, pool_token_amount) = (5649849392384, 802743571), swap_token_a_amount = 8635329900021090859, swap_token_b_amount = 5937523632224925609
+cc 9856e9ac2be3a9f6c6ff5f80c4066d5784ba984577fd528be081ece0c0e9be73 # shrinks to source_token_amount = 8672435282486602928, swap_source_amount = 14110526432466250152, swap_destination_amount = 1, pool_supply = 1000000000
+cc ce11a2ae440cbe4526f2025fcafda0d3be1238e1c8af3d90a9dcb805c62d5d79 # shrinks to (pool_token_supply, pool_token_amount) = (56021075997, 3492), swap_token_a_amount = 10336838220508798136, swap_token_b_amount = 847242827004314935
+cc d1de500368e4e4b61d77e07e1e682218efd8372307cc70280fab1f8e870a9b32 # shrinks to source_token_amount = 8350338672554554571, swap_source_amount = 10096405401154997045, swap_destination_amount = 1
+cc 2ae8542e1e823da04de099c3e2c62c88381da60371c95364f90bef14f73f4918 # shrinks to source_token_amount = 106340024005006401, swap_source_amount = 1, swap_destination_amount = 1, pool_supply = 1000000000
+cc ae5cc37afcc8936c5b30e7d1868aea1c216d5adfbf6b511f76e9565ef54476a4 # shrinks to pool_token_amount = 156430395370765126, pool_token_supply = 1, swap_token_a_amount = 1, swap_token_b_amount = 118
