@@ -4,6 +4,8 @@
 [![Build Status](https://img.shields.io/github/workflow/status/SenchaHQ/sencha/E2E/master)](https://github.com/SenchaHQ/sencha/actions/workflows/programs-e2e.yml?query=branch%3Amaster)
 [![Contributors](https://img.shields.io/github/contributors/SenchaHQ/sencha)](https://github.com/SenchaHQ/sencha/graphs/contributors)
 
+![Sencha](/images/banner.png)
+
 Sencha is an automated market maker for Solana tokens.
 
 We're in active development. For the latest updates, please join our community:
