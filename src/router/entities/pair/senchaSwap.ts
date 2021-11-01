@@ -7,7 +7,7 @@ import type { CpAmmWrapper } from "../../..";
 import type { PoolStrategy } from ".";
 import { Pair } from ".";
 
-interface IExchangeInfo {
+export interface IExchangeInfo {
   fees: CpAmmFees;
   lpTotalSupply: TokenAmount;
   reserves: readonly [IReserve, IReserve];
@@ -57,7 +57,7 @@ const poolStrategy: PoolStrategy<CpAmmPool> = {
 
     if (fromReserves.amount.equalTo(ZERO) || toReserves.amount.equalTo(ZERO)) {
       // TODO: typed errors
-      throw new Error("insufficent resrves");
+      throw new Error("insufficient reserves");
     }
 
     const n = JSBI.multiply(toReserves.amount.raw, inputAmount.raw);

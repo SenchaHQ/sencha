@@ -31,7 +31,8 @@
     "lint": "eslint --cache .",
     "lint:ci": "eslint . --max-warnings=0",
     "test:e2e": "anchor test --skip-build",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "docs:generate": "typedoc --excludePrivate --includeVersion --out site/ src/index.ts"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
@@ -70,6 +71,7 @@
     "prettier-plugin-toml": "^0.3.1",
     "rimraf": "^3.0.2",
     "ts-node": "^10.4.0",
+    "typedoc": "^0.22.7",
     "typescript": "^4.4.4"
   },
   "lint-staged": {

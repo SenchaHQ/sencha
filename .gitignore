@@ -1,4 +1,3 @@
-
 .anchor
 .DS_Store
 target
@@ -132,3 +131,4 @@ artifacts/
 src/idls/
 
 Captain.toml
+site/
