@@ -18,7 +18,7 @@ import type BN from "bn.js";
 
 import type { SenchaSDK } from "../..";
 import { DEFAULT_FACTORY } from "../../constants";
-import type { CpAmmProgram } from "../../programs/cpAmm";
+import type { CpAmmProgram, FactoryData } from "../../programs/cpAmm";
 import { comparePubkeys } from "../../utils/comparePubkeys";
 import { decodeFees } from "./fee";
 import { PARSE_SWAP_INFO } from "./parsers";
@@ -178,7 +178,13 @@ export class CpAmmWrapper {
       programId: program.programId,
     });
 
-    const factoryData = await program.account.factory.fetch(factory);
+    const factoryData: FactoryData | null =
+      (await program.account.factory.fetchNullable(
+        factory
+      )) as FactoryData | null;
+    if (!factoryData) {
+      throw new Error("Factory does not exist on network");
+    }
     const [swapMeta, metaBump] = await findSwapMetaAddress({
       factory,
       index: factoryData.numSwaps.toNumber(),
