@@ -17,9 +17,9 @@ export const ONE = new BN(1);
 export const MAX_U64 = new BN("9223372036854775807");
 export const BASE_TEN = new BN(10);
 
-// maps to base: FACAsM42zGSQ9KomGRYgNspE7oFcn2gDFVJbWnz5DY8m
+// maps to base: SENfrUReUHhi9sM4uLqiZvWBSBTYjJDrpK1Grvsg6Tr
 export const DEFAULT_FACTORY = new PublicKey(
-  "Fyg2SgUDLzhZkMpG5var8Zrgh6XEFpAPLRJNtvJHHDr6"
+  "DtXfMx19KqLfUWJGPMdkjxfbzQ4PrHyBQhA7vgQ2oRzG"
 );
 
 export const PROGRAM_ADDRESSES = {

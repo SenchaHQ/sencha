@@ -20,7 +20,7 @@ pub struct NewFactory<'info> {
         bump = bump,
         payer = payer
     )]
-    pub factory: Account<'info, Factory>,
+    pub factory: Box<Account<'info, Factory>>,
 
     /// Payer.
     #[account(mut)]
@@ -36,7 +36,7 @@ pub struct NewFactory<'info> {
 pub struct NewSwap<'info> {
     /// The [Factory].
     #[account(mut)]
-    pub factory: Account<'info, Factory>,
+    pub factory: Box<Account<'info, Factory>>,
 
     /// The swap account
     #[account(
@@ -50,7 +50,7 @@ pub struct NewSwap<'info> {
         bump = bump,
         payer = payer
     )]
-    pub swap: Account<'info, SwapInfo>,
+    pub swap: Box<Account<'info, SwapInfo>>,
 
     /// The pool mint of the swap.
     #[account(mut)]
@@ -80,7 +80,7 @@ pub struct NewSwap<'info> {
 #[instruction(bump: u8)]
 pub struct NewSwapMeta<'info> {
     /// The swap account
-    pub swap: Account<'info, SwapInfo>,
+    pub swap: Box<Account<'info, SwapInfo>>,
 
     /// The swap meta
     #[account(
@@ -93,7 +93,7 @@ pub struct NewSwapMeta<'info> {
         bump = bump,
         payer = payer
     )]
-    pub swap_meta: Account<'info, SwapMeta>,
+    pub swap_meta: Box<Account<'info, SwapMeta>>,
 
     /// Payer.
     #[account(mut)]
@@ -170,7 +170,7 @@ pub struct SwapUserContext<'info> {
     pub token_program: Program<'info, Token>,
     /// The [SwapInfo] account.
     #[account(mut)]
-    pub swap: Account<'info, SwapInfo>,
+    pub swap: Box<Account<'info, SwapInfo>>,
     /// The authority of the user.
     pub user_authority: Signer<'info>,
 }

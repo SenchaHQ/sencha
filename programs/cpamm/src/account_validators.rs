@@ -27,12 +27,12 @@ impl<'info> Validate<'info> for NewSwap<'info> {
         );
         assert_keys!(
             self.pool_mint.mint_authority.unwrap(),
-            self.swap,
+            *self.swap,
             "pool_mint.mint_authority"
         );
         assert_keys!(
             self.pool_mint.freeze_authority.unwrap(),
-            self.swap,
+            *self.swap,
             "pool_mint.freeze_authority"
         );
 
