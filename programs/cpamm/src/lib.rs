@@ -6,7 +6,7 @@
 mod macros;
 
 use anchor_lang::prelude::*;
-use anchor_spl::token::{mint_to, MintTo};
+use anchor_spl::token::MintTo;
 use vipers::validate::Validate;
 use vipers::*;
 
@@ -29,6 +29,8 @@ declare_id!("SCHAtsf8mbjyjiv4LkhLKutTf6JnZAbdJKFkXQNMFHZ");
 /// Constant product AMM.
 #[program]
 pub mod cpamm {
+    use anchor_spl::token;
+
     use super::*;
 
     /// Creates a new [Factory].
@@ -55,6 +57,15 @@ pub mod cpamm {
         let token_1 = &ctx.accounts.token_1;
         require!(token_0.reserve.amount != 0, NewSwapMustHaveNonZeroSupply);
         require!(token_1.reserve.amount != 0, NewSwapMustHaveNonZeroSupply);
+
+        let initial_liquidity = unwrap_int!(xyk::calculate_initial_swap_pool_amount(
+            token_0.reserve.amount,
+            token_1.reserve.amount
+        ));
+        require!(
+            initial_liquidity >= xyk::MINIMUM_LIQUIDITY,
+            InitialLiquidityTooLow
+        );
 
         // update factory index
         let factory = &mut ctx.accounts.factory;
@@ -86,33 +97,21 @@ pub mod cpamm {
             price_1_cumulative_last: 0,
         };
 
-        let token_swap = &ctx.accounts.swap;
-
-        let token_program = &ctx.accounts.token_program;
-
-        let initial_liquidity = unwrap_int!(xyk::calculate_initial_swap_pool_amount(
-            token_0.reserve.amount,
-            token_1.reserve.amount
-        ));
-        require!(
-            initial_liquidity >= xyk::MINIMUM_LIQUIDITY,
-            InitialLiquidityTooLow
-        );
-
         // mint initial liquidity to initial staker
-        let seeds = gen_swap_signer_seeds!(token_swap);
+        let seeds = gen_swap_signer_seeds!(swap_info);
         let signer_seeds = &[&seeds[..]];
-        let cpi_accounts = MintTo {
-            mint: ctx.accounts.pool_mint.to_account_info(),
-            to: ctx.accounts.output_lp.to_account_info(),
-            authority: token_swap.to_account_info(),
-        };
-        let cpi_ctx = CpiContext::new_with_signer(
-            token_program.to_account_info(),
-            cpi_accounts,
-            signer_seeds,
-        );
-        mint_to(cpi_ctx, initial_liquidity)?;
+        token::mint_to(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                MintTo {
+                    mint: ctx.accounts.pool_mint.to_account_info(),
+                    to: ctx.accounts.output_lp.to_account_info(),
+                    authority: swap_info.to_account_info(),
+                },
+                signer_seeds,
+            ),
+            initial_liquidity,
+        )?;
 
         emit!(NewPoolEvent {
             lp_mint: ctx.accounts.pool_mint.key(),
