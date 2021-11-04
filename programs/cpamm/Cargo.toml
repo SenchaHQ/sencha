@@ -23,6 +23,6 @@ default = []
 anchor-lang = ">=0.17.0"
 anchor-spl = ">=0.17.0"
 num-traits = "0.2"
-vipers = "1.3.0"
+vipers = "1.4.0"
 spl-associated-token-account = "1.0.3"
 xyk = { path = "../../lib/xyk", version = "0.1.0" }
