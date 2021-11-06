@@ -1,4 +1,3 @@
-export * as constants from "./constants";
 export * from "./constants";
 export * as programs from "./programs";
 export * from "./programs";

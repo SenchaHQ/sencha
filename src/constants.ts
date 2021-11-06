@@ -1,6 +1,5 @@
 import { Percent, u64 } from "@saberhq/token-utils";
 import { PublicKey } from "@solana/web3.js";
-import { BN } from "bn.js";
 
 import type { Fees } from "./wrappers/cp-amm/types";
 
@@ -8,14 +7,6 @@ export const LOCAL_CHAIN_ID = 100;
 
 export const DEFAULT_DECIMALS = 6;
 export const DEFAULT_HARD_CAP = new u64("10000000000000000"); // 10 billion
-
-export const SECONDS_PER_DAY = new u64(24 * 60 * 60);
-export const SECONDS_PER_YEAR = new u64(365).mul(SECONDS_PER_DAY);
-
-export const ZERO = new BN(0);
-export const ONE = new BN(1);
-export const MAX_U64 = new BN("9223372036854775807");
-export const BASE_TEN = new BN(10);
 
 // maps to base: SENfrUReUHhi9sM4uLqiZvWBSBTYjJDrpK1Grvsg6Tr
 export const DEFAULT_FACTORY = new PublicKey(
