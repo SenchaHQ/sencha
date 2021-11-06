@@ -1,22 +1,19 @@
 import type { Address } from "@project-serum/anchor";
 import { Program, Provider as AnchorProvider } from "@project-serum/anchor";
 import type { Event, EventParser, Provider } from "@saberhq/solana-contrib";
-import {
-  SignerWallet,
-  SolanaProvider,
-  TransactionEnvelope,
-} from "@saberhq/solana-contrib";
+import { SignerWallet, SolanaProvider } from "@saberhq/solana-contrib";
 import type { TokenAmount } from "@saberhq/token-utils";
-import type { Signer, TransactionInstruction } from "@solana/web3.js";
+import type { PublicKey, Signer } from "@solana/web3.js";
 import mapValues from "lodash.mapvalues";
 import invariant from "tiny-invariant";
 
-import { PROGRAM_ADDRESSES } from ".";
+import { DEFAULT_FACTORY, PROGRAM_ADDRESSES } from "./constants";
 import type { CpAmmProgram } from "./programs/cpAmm";
 import { CpammJSON } from "./programs/cpAmm";
 import type { ActionPlan, Trade } from "./router";
 import { Router } from "./router";
 import { EventParser as SEventParser } from "./utils/eventParser";
+import { SenchaFactory } from "./wrappers/cp-amm/factory";
 
 /**
  * Program IDLs.
@@ -40,6 +37,15 @@ export class SenchaSDK {
     public readonly programs: Programs
   ) {
     this._router = new Router(provider, programs);
+  }
+
+  /**
+   * Loads a Factory wrapper.
+   * @param factory The factory to load.
+   * @returns
+   */
+  loadFactory(factory: PublicKey = DEFAULT_FACTORY): SenchaFactory {
+    return new SenchaFactory(this, factory);
   }
 
   /**
@@ -97,19 +103,6 @@ export class SenchaSDK {
       });
       return events;
     };
-  }
-
-  /**
-   * Constructs a new transaction envelope.
-   * @param instructions
-   * @param signers
-   * @returns
-   */
-  public newTx(
-    instructions: TransactionInstruction[],
-    signers?: Signer[]
-  ): TransactionEnvelope {
-    return new TransactionEnvelope(this.provider, instructions, signers);
   }
 
   /**

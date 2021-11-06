@@ -10,19 +10,16 @@ import {
   createMint,
   createMintToInstruction,
   getOrCreateATAs,
-  SPLToken,
-  TOKEN_PROGRAM_ID,
+  Token,
+  TokenAmount,
   u64,
 } from "@saberhq/token-utils";
-import type {
-  PublicKey,
-  Signer,
-  TransactionInstruction,
-} from "@solana/web3.js";
+import type { Signer, TransactionInstruction } from "@solana/web3.js";
 import { Connection, Keypair } from "@solana/web3.js";
 
 import { CpAmmWrapper, findSwapAddress } from "..";
 import { comparePubkeys } from "../utils/comparePubkeys";
+import type { SenchaFactory } from "../wrappers/cp-amm/factory";
 import { makeSDK } from "./workspace";
 
 const CLUSTER_URL = "http://localhost:8899";
@@ -39,11 +36,12 @@ describe("CpAmm", () => {
   // Read the provider from the configured environment.
   const sencha = makeSDK();
 
-  let tokenAMint: PublicKey;
-  let tokenBMint: PublicKey;
+  let token0: Token;
+  let token1: Token;
+  let factory: SenchaFactory;
   let swap: CpAmmWrapper;
   let payer: Signer;
-  let owner: Signer;
+  let owner: Keypair;
   let connection: Connection;
 
   beforeEach(async () => {
@@ -79,31 +77,37 @@ describe("CpAmm", () => {
       )
     ).to.be.fulfilled;
 
-    tokenAMint = await createMint(
-      provider,
-      mintAuthority.publicKey,
+    token0 = Token.fromMint(
+      await createMint(
+        provider,
+        mintAuthority.publicKey,
+        DEFAULT_TOKEN_DECIMALS
+      ),
       DEFAULT_TOKEN_DECIMALS
     );
-    tokenBMint = await createMint(
-      provider,
-      mintAuthority.publicKey,
+    token1 = Token.fromMint(
+      await createMint(
+        provider,
+        mintAuthority.publicKey,
+        DEFAULT_TOKEN_DECIMALS
+      ),
       DEFAULT_TOKEN_DECIMALS
     );
-    if (comparePubkeys(tokenAMint, tokenBMint) === 1) {
-      const nextTokenAMint = tokenBMint;
-      tokenBMint = tokenAMint;
-      tokenAMint = nextTokenAMint;
+    if (comparePubkeys(token0.mintAccount, token1.mintAccount) === 1) {
+      const nextToken0 = token1;
+      token1 = token0;
+      token0 = nextToken0;
     }
 
     const initialLiquidityProviderKP = owner;
     const tokenInstructions: TransactionInstruction[] = [];
 
     const {
-      accounts: { tokenA: sourceAccountA, tokenB: sourceAccountB },
+      accounts: { token0: sourceAccountA, token1: sourceAccountB },
       instructions,
     } = await getOrCreateATAs({
       provider,
-      mints: { tokenA: tokenAMint, tokenB: tokenBMint },
+      mints: { token0: token0.mintAccount, token1: token1.mintAccount },
       owner: initialLiquidityProviderKP.publicKey,
     });
     tokenInstructions.push(...instructions);
@@ -111,7 +115,7 @@ describe("CpAmm", () => {
     // go through the extra step of seeding the initial LP's ATAs
     const preseedLPTokenAInstructions = createMintToInstruction({
       provider,
-      mint: tokenAMint,
+      mint: token0.mintAccount,
       mintAuthorityKP: mintAuthority,
       to: sourceAccountA,
       amount: new u64(DEFAULT_INITIAL_TOKEN_A_AMOUNT),
@@ -119,7 +123,7 @@ describe("CpAmm", () => {
 
     const preseedLPTokenBInstructions = createMintToInstruction({
       provider,
-      mint: tokenBMint,
+      mint: token1.mintAccount,
       mintAuthorityKP: mintAuthority,
       to: sourceAccountB,
       amount: new u64(DEFAULT_INITIAL_TOKEN_B_AMOUNT),
@@ -130,61 +134,37 @@ describe("CpAmm", () => {
       .combine(preseedLPTokenBInstructions);
     await expectTX(tokenTx, "Create pool user accounts").to.be.fulfilled;
 
-    const seedPoolAccounts = ({
-      tokenAAccount,
-      tokenBAccount,
-    }: {
-      tokenAAccount: PublicKey;
-      tokenBAccount: PublicKey;
-    }) => {
-      return {
-        instructions: [
-          SPLToken.createTransferInstruction(
-            TOKEN_PROGRAM_ID,
-            sourceAccountA,
-            tokenAAccount,
-            initialLiquidityProviderKP.publicKey,
-            [initialLiquidityProviderKP],
-            1_000_000
-          ),
-          SPLToken.createTransferInstruction(
-            TOKEN_PROGRAM_ID,
-            sourceAccountB,
-            tokenBAccount,
-            initialLiquidityProviderKP.publicKey,
-            [initialLiquidityProviderKP],
-            1_000_000
-          ),
-        ],
-        signers: [initialLiquidityProviderKP],
-      };
-    };
-
-    const { key: factory, tx: initFactoryTX } = await CpAmmWrapper.newFactory({
-      sdk: sencha,
-    });
+    const { key: factoryKey, tx: initFactoryTX } =
+      await CpAmmWrapper.newFactory({
+        sdk: sencha,
+      });
     await expectTX(initFactoryTX, "Create Factory").to.be.fulfilled;
 
-    const { initAccountsTX, initSwapTX } = await CpAmmWrapper.newSwap({
-      sdk: sencha,
-      factory,
-      tokenAMint,
-      tokenBMint,
-      seedPoolAccounts,
-    });
+    const ownerSDK = sencha.withSigner(owner);
+
+    const tokenAAmount = new TokenAmount(token0, 1_000_000);
+    const tokenBAmount = new TokenAmount(token1, 1_000_000);
+
+    const { initAccountsTX, initSwapTX } = await ownerSDK
+      .loadFactory(factoryKey)
+      .initSwap({
+        tokenAAmount,
+        tokenBAmount,
+      });
 
     await expectTX(initAccountsTX, "Create Swap Accounts").to.be.fulfilled;
 
     await expectTX(initSwapTX, "Create Swap").to.be.fulfilled;
 
     const [key] = await findSwapAddress({
-      factory,
-      mintA: tokenAMint,
-      mintB: tokenBMint,
+      factory: factoryKey,
+      mintA: token0.mintAccount,
+      mintB: token1.mintAccount,
       programId: sencha.programs.CpAmm.programId,
     });
     const loadedSwap = await CpAmmWrapper.load({ sdk: sencha, key: key });
 
+    factory = sencha.loadFactory(factoryKey);
     swap = loadedSwap;
   });
 

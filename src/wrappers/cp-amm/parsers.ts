@@ -10,7 +10,7 @@ import { CpammJSON } from "../../programs/cpAmm";
 
 export type AccountParser<T> = (d: KeyedAccountInfo) => T;
 
-const SENCHA_CPAMM_CODER = new Coder(CpammJSON);
+export const SENCHA_CPAMM_CODER = new Coder(CpammJSON);
 
 export const PARSE_SWAP_INFO: AccountParser<SwapInfoData> = (
   d: KeyedAccountInfo
@@ -19,13 +19,14 @@ export const PARSE_SWAP_INFO: AccountParser<SwapInfoData> = (
     "SwapInfo",
     d.accountInfo.data
   );
+
+export const parseSwapMetaData = (data: Buffer): SwapMetaData =>
+  SENCHA_CPAMM_CODER.accounts.decode<SwapMetaData>("SwapMeta", data);
+
 export const PARSE_SWAP_META: AccountParser<SwapMetaData> = (
   d: KeyedAccountInfo
-) =>
-  SENCHA_CPAMM_CODER.accounts.decode<SwapMetaData>(
-    "SwapMeta",
-    d.accountInfo.data
-  );
+) => parseSwapMetaData(d.accountInfo.data);
+
 export const PARSE_FACTORY: AccountParser<FactoryData> = (
   d: KeyedAccountInfo
 ) =>
