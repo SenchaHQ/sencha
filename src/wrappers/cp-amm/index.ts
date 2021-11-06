@@ -140,6 +140,7 @@ export class CpAmmWrapper {
    * Creates a new swap.
    * TODO: this should just be a wrapper over the program, so seedPoolAccounts helper
    * utils moved outside
+   * @deprecated see {@link SenchaFactory#initSwap}.
    * @returns
    */
   static async newSwap({

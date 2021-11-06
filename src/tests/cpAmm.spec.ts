@@ -1,5 +1,7 @@
 /// <reference types="mocha" />
 
+import "chai-bn";
+
 import { expectTX } from "@saberhq/chai-solana";
 import {
   PendingTransaction,
@@ -10,16 +12,17 @@ import {
   createMint,
   createMintToInstruction,
   getOrCreateATAs,
+  getTokenAccount,
   Token,
   TokenAmount,
   u64,
 } from "@saberhq/token-utils";
 import type { Signer, TransactionInstruction } from "@solana/web3.js";
 import { Connection, Keypair } from "@solana/web3.js";
+import { expect } from "chai";
 
 import { CpAmmWrapper, findSwapAddress } from "..";
 import { comparePubkeys } from "../utils/comparePubkeys";
-import type { SenchaFactory } from "../wrappers/cp-amm/factory";
 import { makeSDK } from "./workspace";
 
 const CLUSTER_URL = "http://localhost:8899";
@@ -38,7 +41,6 @@ describe("CpAmm", () => {
 
   let token0: Token;
   let token1: Token;
-  let factory: SenchaFactory;
   let swap: CpAmmWrapper;
   let payer: Signer;
   let owner: Keypair;
@@ -164,18 +166,19 @@ describe("CpAmm", () => {
     });
     const loadedSwap = await CpAmmWrapper.load({ sdk: sencha, key: key });
 
-    factory = sencha.loadFactory(factoryKey);
     swap = loadedSwap;
   });
 
   it("initializes reserves correctly", async () => {
-    const token0Reserve = await connection.getTokenAccountBalance(
+    const token0Reserve = await getTokenAccount(
+      sencha.provider,
       swap.state.token0.reserves
     );
-    const token1Reserve = await connection.getTokenAccountBalance(
+    const token1Reserve = await getTokenAccount(
+      sencha.provider,
       swap.state.token1.reserves
     );
-
-    console.log({ token0Reserve, token1Reserve });
+    expect(token0Reserve.amount).to.bignumber.eq("1000000");
+    expect(token1Reserve.amount).to.bignumber.eq("1000000");
   });
 });
