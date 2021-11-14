@@ -239,7 +239,8 @@ pub enum ErrorCode {
     SwapTokensNotSorted,
     #[msg("Swap's token mints cannot be the same")]
     SwapTokensCannotBeEqual,
-
+    #[msg("Swap's pool mint supply must be zero")]
+    SwapPoolMintSupply,
     #[msg("Invalid fee", offset = 20)]
     InvalidFee,
 }

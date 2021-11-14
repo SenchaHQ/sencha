@@ -35,6 +35,7 @@ impl<'info> Validate<'info> for NewSwap<'info> {
             *self.swap,
             "pool_mint.freeze_authority"
         );
+        require!(self.pool_mint.supply == 0, SwapPoolMintSupply);
 
         // output_lp
         assert_keys!(self.output_lp.mint, *self.pool_mint, "output_lp.mint",);
