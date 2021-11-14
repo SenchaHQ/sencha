@@ -11,6 +11,7 @@ import {
 import {
   createMint,
   createMintToInstruction,
+  getMintInfo,
   getOrCreateATAs,
   getTokenAccount,
   Token,
@@ -19,6 +20,7 @@ import {
 } from "@saberhq/token-utils";
 import type { Signer, TransactionInstruction } from "@solana/web3.js";
 import { Connection, Keypair } from "@solana/web3.js";
+import { BN } from "bn.js";
 import { expect } from "chai";
 
 import { CpAmmWrapper, findSwapAddress } from "..";
@@ -180,5 +182,50 @@ describe("CpAmm", () => {
     );
     expect(token0Reserve.amount).to.bignumber.eq("1000000");
     expect(token1Reserve.amount).to.bignumber.eq("1000000");
+
+    const { accounts: ownerAccounts } = await getOrCreateATAs({
+      provider: sencha.provider,
+      mints: { poolMint: swap.state.poolMint },
+      owner: owner.publicKey,
+    });
+
+    // TODO
+    // [x] validate that the owner has the correct amount of initial lp tokens
+    // [x] validate that the total supply of lp tokens matches the initial lp tokens minted to the user
+
+    // withdraw
+    // withdraw and check that withdrawing all liquidity is diallowed
+    // withdraw and check that withdrawing under the liquidity should fail
+    // random-ass withdrawals
+    // check cumulative price figure field
+
+    // swap
+    // swap and check that swapping infinte amount should fail
+    // check cumulative price figure field
+
+    // deposit
+    // deposit and checkthat the cumulative price figure is correct
+
+    // twap
+    // copy UNISWAP's twap oracle tests
+
+    const ownerPoolMintAccount = await getTokenAccount(
+      sencha.provider,
+      ownerAccounts.poolMint
+    );
+    const expectedLPAmount = new BN(
+      Math.sqrt(token0Reserve.amount.mul(token1Reserve.amount).toNumber())
+    );
+    expect(ownerPoolMintAccount.amount).to.bignumber.eq(expectedLPAmount);
+
+    const lpMintInfo = await getMintInfo(sencha.provider, swap.state.poolMint);
+    expect(lpMintInfo.supply).to.bignumber.eq(expectedLPAmount);
+
+    //  const poolMint = await getTokenAccount(sencha.provider, swap.state.poolMint)
+    //  poolMint.amount
+  });
+
+  it("withdraw", async () => {
+    // swap.withdraw({ poolTokenAmount: new TokenAmount(swap.state.poolMint) });
   });
 });
