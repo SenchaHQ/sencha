@@ -104,7 +104,7 @@ impl<'info> Validate<'info> for Deposit<'info> {
         self.input_1.validate_for_swap(&self.user.swap.token_1)?;
 
         // should be same as swap
-        assert_keys_eq!(*self.pool_mint, self.user.swap.pool_mint, "pool_mint");
+        assert_keys_eq!(self.pool_mint, self.user.swap.pool_mint, "pool_mint");
 
         // lp output destination
         assert_keys_eq!(
@@ -147,7 +147,7 @@ impl<'info> InitSwapToken<'info> {
 
 impl<'info> SwapToken<'info> {
     fn validate_for_swap(&self, swap_info: &SwapTokenInfo) -> ProgramResult {
-        assert_keys_eq!(*self.reserve, swap_info.reserves, "reserve");
+        assert_keys_eq!(self.reserve, swap_info.reserves, "reserve");
         assert_keys_eq!(self.user.mint, swap_info.mint, "user.mint");
 
         // ensure no self-dealing
@@ -159,19 +159,13 @@ impl<'info> SwapToken<'info> {
 
 impl<'info> SwapTokenWithFees<'info> {
     fn validate_for_swap(&self, swap_info: &SwapTokenInfo) -> ProgramResult {
-        assert_keys_eq!(*self.fees, swap_info.admin_fees, "fees");
-        assert_keys_eq!(*self.reserve, swap_info.reserves, "reserve");
+        assert_keys_eq!(self.fees, swap_info.admin_fees, "fees");
+        assert_keys_eq!(self.reserve, swap_info.reserves, "reserve");
         assert_keys_eq!(self.user.mint, swap_info.mint, "user.mint");
 
         // ensure no self-dealing
-        invariant!(
-            self.fees.key() != self.user.key(),
-            "user cannot be fees account"
-        );
-        invariant!(
-            self.reserve.key() != self.user.key(),
-            "user cannot be reserve account"
-        );
+        assert_keys_neq!(self.fees, self.user, "user cannot be fees account");
+        assert_keys_neq!(self.reserve, self.user, "user cannot be reserve account");
         Ok(())
     }
 }
