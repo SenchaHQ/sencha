@@ -180,9 +180,7 @@ export class CpAmmWrapper {
     });
 
     const factoryData: FactoryData | null =
-      (await program.account.factory.fetchNullable(
-        factory
-      )) as FactoryData | null;
+      await program.account.factory.fetchNullable(factory);
     if (!factoryData) {
       throw new Error("Factory does not exist on network");
     }
