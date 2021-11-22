@@ -4,7 +4,7 @@ use crate::{
 };
 use anchor_lang::{prelude::*, Key};
 use vipers::validate::Validate;
-use vipers::{assert_ata, assert_keys, invariant};
+use vipers::{assert_ata, assert_keys_eq, assert_keys_neq, invariant};
 
 // --------------------------------
 // Instruction account structs
@@ -25,20 +25,20 @@ impl<'info> Validate<'info> for NewSwap<'info> {
             self.pool_mint.decimals == pool_mint_decimals,
             "pool mint decimals must be the max of token A and token B mint"
         );
-        assert_keys!(
+        assert_keys_eq!(
             self.pool_mint.mint_authority.unwrap(),
-            *self.swap,
+            self.swap,
             "pool_mint.mint_authority"
         );
-        assert_keys!(
+        assert_keys_eq!(
             self.pool_mint.freeze_authority.unwrap(),
-            *self.swap,
+            self.swap,
             "pool_mint.freeze_authority"
         );
         require!(self.pool_mint.supply == 0, SwapPoolMintSupply);
 
         // output_lp
-        assert_keys!(self.output_lp.mint, *self.pool_mint, "output_lp.mint",);
+        assert_keys_eq!(self.output_lp.mint, self.pool_mint, "output_lp.mint",);
 
         let token_0_mint = &self.token_0.mint;
         let token_1_mint = &self.token_1.mint;
@@ -85,8 +85,8 @@ impl<'info> Validate<'info> for Withdraw<'info> {
     fn validate(&self) -> ProgramResult {
         require!(!self.user.swap.is_paused, Paused);
 
-        assert_keys!(self.pool_mint, self.user.swap.pool_mint, "pool_mint");
-        assert_keys!(self.input_lp.mint, self.pool_mint, "input_lp.mint");
+        assert_keys_eq!(self.pool_mint, self.user.swap.pool_mint, "pool_mint");
+        assert_keys_eq!(self.input_lp.mint, self.pool_mint, "input_lp.mint");
 
         self.output_0.validate_for_swap(&self.user.swap.token_0)?;
         self.output_1.validate_for_swap(&self.user.swap.token_1)?;
@@ -104,16 +104,17 @@ impl<'info> Validate<'info> for Deposit<'info> {
         self.input_1.validate_for_swap(&self.user.swap.token_1)?;
 
         // should be same as swap
-        assert_keys!(*self.pool_mint, self.user.swap.pool_mint, "pool_mint");
+        assert_keys_eq!(self.pool_mint, self.user.swap.pool_mint, "pool_mint");
 
         // lp output destination
-        assert_keys!(
+        assert_keys_eq!(
             self.output_lp.mint,
             self.user.swap.pool_mint,
             "output_lp.mint"
         );
-        invariant!(
-            self.output_lp.owner != self.user.swap.key(),
+        assert_keys_neq!(
+            self.output_lp.owner,
+            self.user.swap,
             "output_lp.owner should not be the swap"
         );
 
@@ -133,30 +134,24 @@ impl<'info> InitSwapToken<'info> {
         // would prevent the swap from working.
         // We do not think this is necessary to add.
 
-        assert_keys!(self.fees.mint, *self.mint, "fees.mint");
-        assert_keys!(self.fees.owner, swap, "fees.owner");
+        assert_keys_eq!(self.fees.mint, self.mint, "fees.mint");
+        assert_keys_eq!(self.fees.owner, swap, "fees.owner");
         assert_ata!(*self.reserve, swap, *self.mint, "reserve");
 
         // ensure the fee and reserve accounts are different
         // otherwise protocol fees would accrue to the LP holders
-        invariant!(
-            self.fees.key() != self.reserve.key(),
-            "fees cannot equal reserve"
-        );
+        assert_keys_neq!(self.fees, self.reserve, "fees cannot equal reserve");
         Ok(())
     }
 }
 
 impl<'info> SwapToken<'info> {
     fn validate_for_swap(&self, swap_info: &SwapTokenInfo) -> ProgramResult {
-        assert_keys!(*self.reserve, swap_info.reserves, "reserve");
-        assert_keys!(self.user.mint, swap_info.mint, "user.mint");
+        assert_keys_eq!(self.reserve, swap_info.reserves, "reserve");
+        assert_keys_eq!(self.user.mint, swap_info.mint, "user.mint");
 
         // ensure no self-dealing
-        invariant!(
-            self.reserve.key() != self.user.key(),
-            "user cannot be reserve account"
-        );
+        assert_keys_neq!(self.reserve, self.user, "user cannot be reserve account");
 
         Ok(())
     }
@@ -164,19 +159,13 @@ impl<'info> SwapToken<'info> {
 
 impl<'info> SwapTokenWithFees<'info> {
     fn validate_for_swap(&self, swap_info: &SwapTokenInfo) -> ProgramResult {
-        assert_keys!(*self.fees, swap_info.admin_fees, "fees");
-        assert_keys!(*self.reserve, swap_info.reserves, "reserve");
-        assert_keys!(self.user.mint, swap_info.mint, "user.mint");
+        assert_keys_eq!(self.fees, swap_info.admin_fees, "fees");
+        assert_keys_eq!(self.reserve, swap_info.reserves, "reserve");
+        assert_keys_eq!(self.user.mint, swap_info.mint, "user.mint");
 
         // ensure no self-dealing
-        invariant!(
-            self.fees.key() != self.user.key(),
-            "user cannot be fees account"
-        );
-        invariant!(
-            self.reserve.key() != self.user.key(),
-            "user cannot be reserve account"
-        );
+        assert_keys_neq!(self.fees, self.user, "user cannot be fees account");
+        assert_keys_neq!(self.reserve, self.user, "user cannot be reserve account");
         Ok(())
     }
 }
