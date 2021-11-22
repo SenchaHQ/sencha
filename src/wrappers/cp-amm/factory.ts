@@ -53,9 +53,7 @@ export class SenchaFactory {
    * @returns
    */
   async fetch(): Promise<FactoryData | null> {
-    return (await this.program.account.factory.fetchNullable(
-      this.factory
-    )) as FactoryData | null;
+    return await this.program.account.factory.fetchNullable(this.factory);
   }
 
   /**
