@@ -2,11 +2,11 @@
   "nodes": {
     "flake-utils": {
       "locked": {
-        "lastModified": 1634851050,
-        "narHash": "sha256-N83GlSGPJJdcqhUxSCS/WwW5pksYf3VP1M13cDRTSVA=",
+        "lastModified": 1637014545,
+        "narHash": "sha256-26IZAc5yzlD9FlDT54io1oqG/bBoyka+FJk5guaX4x4=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "c91f3de5adaf1de973b797ef7485e441a65b8935",
+        "rev": "bba5dcc8e0b20ab664967ad83d24d64cb64ec4f4",
         "type": "github"
       },
       "original": {
@@ -47,11 +47,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1635122851,
-        "narHash": "sha256-0m8W0u/rQIx9QydApjj7K0cSIBYyP0M62julslW9brs=",
+        "lastModified": 1637453606,
+        "narHash": "sha256-Gy6cwUswft9xqsjWxFYEnx/63/qzaFUwatcbV5GF/GQ=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "33afbbd4afe427d0bcac3354382c33c0a358a06a",
+        "rev": "8afc4e543663ca0a6a4f496262cd05233737e732",
         "type": "github"
       },
       "original": {
@@ -98,11 +98,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1635033593,
-        "narHash": "sha256-F2SpmmCznL71fhH95j7H9tq9Pc+eMemItu0QALltqes=",
+        "lastModified": 1635378334,
+        "narHash": "sha256-+zuetu6pAcoZZjCDt3sGpnD6Di15kVZ3lF2er0jA9No=",
         "owner": "saber-hq",
         "repo": "saber-overlay",
-        "rev": "a8b4f2ce41d50557428b5426045bb97c0eaf9154",
+        "rev": "348f1d6c1930bec5384b85296719f6146c7661df",
         "type": "github"
       },
       "original": {
