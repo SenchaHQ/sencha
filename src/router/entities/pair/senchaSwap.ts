@@ -118,19 +118,16 @@ const poolStrategy: PoolStrategy<CpAmmPool> = {
       }),
     };
   },
+
   getPriceOfToken1: ({ exchange }) => {
     const [reserveA, reserveB] = exchange.reserves;
 
-    const result = reserveA.amount.divide(reserveB.amount);
-
-    const price = new Price(
+    return new Price(
       reserveB.amount.token,
       reserveA.amount.token,
-      result.denominator,
-      result.numerator
+      reserveB.amount.raw,
+      reserveA.amount.raw
     );
-
-    return price;
   },
   hasZeroLiquidity: ({ exchange }) => {
     return (
