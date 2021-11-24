@@ -1791,7 +1791,7 @@ __metadata:
     "@saberhq/eslint-config": ^1.7.4
     "@saberhq/solana-contrib": ^1.7.4
     "@saberhq/token-utils": ^1.7.4
-    "@solana/spl-token-registry": ^0.2.377
+    "@solana/spl-token-registry": ^0.2.416
     "@solana/web3.js": ^1.30.2
     "@types/babel__core": ^7.1.16
     "@types/bn.js": ^5.1.0
@@ -1800,7 +1800,7 @@ __metadata:
     "@types/lodash.mapvalues": ^4.6.6
     "@types/lodash.zip": ^4.2.6
     "@types/mocha": ^9.0.0
-    "@types/node": ^16.11.9
+    "@types/node": ^16.11.10
     "@types/rimraf": ^3.0.2
     bn.js: ^5.2.0
     chai: ^4.3.4
@@ -1810,7 +1810,7 @@ __metadata:
     eslint-plugin-import: ^2.25.3
     husky: ^7.0.4
     jsbi: ^4.1.0
-    lint-staged: ^12.1.1
+    lint-staged: ^12.1.2
     lodash.chunk: ^4.2.0
     lodash.mapvalues: ^4.6.0
     lodash.zip: ^4.2.0
@@ -1843,12 +1843,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@solana/spl-token-registry@npm:^0.2.377":
-  version: 0.2.377
-  resolution: "@solana/spl-token-registry@npm:0.2.377"
+"@solana/spl-token-registry@npm:^0.2.416":
+  version: 0.2.416
+  resolution: "@solana/spl-token-registry@npm:0.2.416"
   dependencies:
     cross-fetch: 3.0.6
-  checksum: 8264af1f9945ce02f4a704062547f84044ce587899cc6f85bc6d7eb476906aed77984e33cef500f15f4839056839e3ba858bece8229c10dbf9d1bea13b0f71f4
+  checksum: 64137dae281590879acfea99c9286586e253b420cd978ce61af04929f17ad95f81b767d348d32e252fdb816dc041e2a572a2367469b06fff34288b229eb25968
   languageName: node
   linkType: hard
 
@@ -2159,10 +2159,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^16.11.9":
-  version: 16.11.9
-  resolution: "@types/node@npm:16.11.9"
-  checksum: baec2e6471ee58fd1e9874e6f47ab95a918a0f46b42424392e4c13e3e07f078f8b72b6b48073b0b14f710ed66c5f1b2e497df43f28151000f11f5f299382cfe2
+"@types/node@npm:^16.11.10":
+  version: 16.11.10
+  resolution: "@types/node@npm:16.11.10"
+  checksum: 9c79419c5c3d92d5825bffa30f3668533f598d8b63a73ea7fc24e47f162bdbed92b0f8e4f4261cc3314b39cee050e303366d2aa154abc95c63a572a110b8c160
   languageName: node
   linkType: hard
 
@@ -4821,9 +4821,9 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:^12.1.1":
-  version: 12.1.1
-  resolution: "lint-staged@npm:12.1.1"
+"lint-staged@npm:^12.1.2":
+  version: 12.1.2
+  resolution: "lint-staged@npm:12.1.2"
   dependencies:
     cli-truncate: ^3.1.0
     colorette: ^2.0.16
@@ -4841,7 +4841,7 @@ fsevents@~2.3.2:
     yaml: ^1.10.2
   bin:
     lint-staged: bin/lint-staged.js
-  checksum: 1c4ec4cbccac7040b7d676f0e4f99d9e8d69360ec99d69cbfb12b6c27708ba8a076741712f1b45e67099fc640b1049a27cba8866a85a299a6048ab39d8e4faa7
+  checksum: ec84ce4f74d0d8fe314bd0b62fb5e0be64af692d1876f68c457116faef61b4b3b79d72df7819c248bfbb20c46e88fbe994128e7351e84bec7048263e00199925
   languageName: node
   linkType: hard
 
