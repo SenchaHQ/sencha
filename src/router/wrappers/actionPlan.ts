@@ -13,7 +13,6 @@ import type {
   Signer,
   TransactionInstruction,
 } from "@solana/web3.js";
-import { Keypair } from "@solana/web3.js";
 
 import type { CpAmmWrapper } from "../..";
 import type { CpAmmProgram } from "../../programs";
@@ -52,13 +51,14 @@ export class ActionPlan {
     const initInstructions: TransactionInstruction[] = [];
     const signers: Signer[] = [];
 
-    const { accounts } = await getOrCreateATAs({
-      provider,
-      mints: {
-        input: this.inputAmount.token.mintAccount,
-        output: this.minimumAmountOut.token.mintAccount,
-      },
-    });
+    const { accounts, instructions: initUserTokenAccountsInstructions } =
+      await getOrCreateATAs({
+        provider,
+        mints: {
+          input: this.inputAmount.token.mintAccount,
+          output: this.minimumAmountOut.token.mintAccount,
+        },
+      });
 
     const swapInstructions: TransactionInstruction[] = [];
     const closeInstructions: TransactionInstruction[] = [];
@@ -106,7 +106,12 @@ export class ActionPlan {
 
     return new TransactionEnvelope(
       provider,
-      [...initInstructions, ...swapInstructions, ...closeInstructions],
+      [
+        ...initUserTokenAccountsInstructions,
+        ...initInstructions,
+        ...swapInstructions,
+        ...closeInstructions,
+      ],
       [...signers]
     );
   }
@@ -147,13 +152,13 @@ const makeSwapInstruction = async ({
   let output = outputAccount;
   let createOutputAccount: TransactionEnvelope | null = null;
   if (!output) {
-    const tempOutput = Keypair.generate();
-    output = tempOutput.publicKey;
-    const { tx } = await createTokenAccount({
+    const { tx, key } = await createTokenAccount({
       provider,
       mint: action.outputToken.mintAccount,
       owner: user,
     });
+
+    output = key;
     createOutputAccount = tx;
   }
 
