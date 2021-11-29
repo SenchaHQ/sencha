@@ -74,6 +74,10 @@ impl<'info> Validate<'info> for Swap<'info> {
             } else {
                 (&self.user.swap.token_1, &self.user.swap.token_0)
             };
+
+        assert_keys_eq!(self.input.user.owner, self.user.user_authority, "input.user.owner must be user.user_authority");
+        assert_keys_eq!( self.output.user.owner, self.user.user_authority, "output.user.owner must be user.user_authority");
+
         self.input.validate_for_swap(swap_input)?;
         self.output.validate_for_swap(swap_output)?;
 
