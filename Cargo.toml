@@ -1,5 +1,5 @@
 [workspace]
-members = ["lib/*", "programs/*"]
+members = ["programs/*", "programs/cpamm/lib/*"]
 
 # some optimizations
 # https://discord.com/channels/889577356681945098/889606719829835816/896559943610662962

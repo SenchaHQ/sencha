@@ -1,8 +1,5 @@
 anchor_version = "0.18.0"
 
-[workspace]
-members = ["lib/xyk", "programs/cpamm"]
-
 [registry]
 url = "https://anchor.projectserum.com"
 
