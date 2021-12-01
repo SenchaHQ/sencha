@@ -1,6 +1,6 @@
 use crate::{
     Deposit, InitSwapToken, NewFactory, NewSwap, NewSwapMeta, Swap, SwapToken, SwapTokenInfo,
-    SwapTokenWithFees, Withdraw,
+    SwapTokenWithFees, SwapUserContext, Withdraw,
 };
 use anchor_lang::{prelude::*, Key};
 use vipers::validate::Validate;
@@ -63,9 +63,18 @@ impl<'info> Validate<'info> for NewSwapMeta<'info> {
     }
 }
 
+impl<'info> Validate<'info> for SwapUserContext<'info> {
+    fn validate(&self) -> ProgramResult {
+        // ensure no self-dealing
+        assert_keys_neq!(self.user_authority, self.swap);
+        require!(!self.swap.is_paused, Paused);
+        Ok(())
+    }
+}
+
 impl<'info> Validate<'info> for Swap<'info> {
     fn validate(&self) -> ProgramResult {
-        require!(!self.user.swap.is_paused, Paused);
+        self.user.validate()?;
 
         // inner validation will ensure that token source mint equals respective reserve
         let (swap_input, swap_output) =
@@ -83,7 +92,7 @@ impl<'info> Validate<'info> for Swap<'info> {
 
 impl<'info> Validate<'info> for Withdraw<'info> {
     fn validate(&self) -> ProgramResult {
-        require!(!self.user.swap.is_paused, Paused);
+        self.user.validate()?;
 
         assert_keys_eq!(self.pool_mint, self.user.swap.pool_mint, "pool_mint");
         assert_keys_eq!(self.input_lp.mint, self.pool_mint, "input_lp.mint");
@@ -97,7 +106,7 @@ impl<'info> Validate<'info> for Withdraw<'info> {
 
 impl<'info> Validate<'info> for Deposit<'info> {
     fn validate(&self) -> ProgramResult {
-        require!(!self.user.swap.is_paused, Paused);
+        self.user.validate()?;
 
         // input_a, input_b should check their equal mints
         self.input_0.validate_for_swap(&self.user.swap.token_0)?;
