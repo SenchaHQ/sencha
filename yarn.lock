@@ -1794,7 +1794,7 @@ __metadata:
     "@saberhq/eslint-config": ^1.10.4
     "@saberhq/solana-contrib": ^1.10.4
     "@saberhq/token-utils": ^1.10.4
-    "@solana/spl-token-registry": ^0.2.535
+    "@solana/spl-token-registry": ^0.2.544
     "@solana/web3.js": ^1.31.0
     "@types/babel__core": ^7.1.16
     "@types/bn.js": ^5.1.0
@@ -1846,12 +1846,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@solana/spl-token-registry@npm:^0.2.535":
-  version: 0.2.535
-  resolution: "@solana/spl-token-registry@npm:0.2.535"
+"@solana/spl-token-registry@npm:^0.2.544":
+  version: 0.2.544
+  resolution: "@solana/spl-token-registry@npm:0.2.544"
   dependencies:
     cross-fetch: 3.0.6
-  checksum: 71116fa7e0474169ea9f69ff5c2e2912511e2254a8e8033a54671de12b46f3a38218e858b8466f687aaf7dcab03ee5f5bda886ab9d921f4162f0519dc2a59bb0
+  checksum: f951c2bc0cedac5bb61006c55f71cf56b3723705ce720b95adee1b9be6c2d488884a747682cd5411e15643ea34259930504c5221125d51a0ecfb19ecb5f314ba
   languageName: node
   linkType: hard
 
