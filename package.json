@@ -30,7 +30,7 @@
     "idl:generate:nolint": "./scripts/parse-idls.sh && RUN_ESLINT=none ./scripts/generate-idl-types.sh",
     "lint": "eslint --cache .",
     "lint:ci": "eslint . --max-warnings=0",
-    "test:e2e": "anchor test --skip-build",
+    "test:e2e": "anchor test --skip-build src/tests/**/*.spec.ts",
     "prepare": "husky install",
     "docs:generate": "typedoc --excludePrivate --includeVersion --out site/ src/index.ts"
   },

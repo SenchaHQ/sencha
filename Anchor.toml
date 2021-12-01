@@ -8,10 +8,10 @@ url = "https://anchor.projectserum.com"
 
 [provider]
 cluster = "localnet"
-wallet = "~/.config/solana/id.json"
+wallet = "./test_wallet.json"
 
 [scripts]
-test = "yarn mocha src/tests/**/*.spec.ts"
+test = "yarn mocha"
 
 [programs.localnet]
 cpamm = "SCHAtsf8mbjyjiv4LkhLKutTf6JnZAbdJKFkXQNMFHZ"
