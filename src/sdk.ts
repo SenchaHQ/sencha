@@ -1,11 +1,9 @@
-import type { Address } from "@project-serum/anchor";
-import { Program, Provider as AnchorProvider } from "@project-serum/anchor";
-import type { Provider } from "@saberhq/solana-contrib";
-import { SignerWallet, SolanaProvider } from "@saberhq/solana-contrib";
+import { buildCoderMap, newProgramMap } from "@saberhq/anchor-contrib";
+import type { AugmentedProvider, Provider } from "@saberhq/solana-contrib";
+import { SolanaAugmentedProvider } from "@saberhq/solana-contrib";
 import type { TokenAmount } from "@saberhq/token-utils";
 import type { PublicKey, Signer } from "@solana/web3.js";
 import mapValues from "lodash.mapvalues";
-import invariant from "tiny-invariant";
 
 import { DEFAULT_FACTORY, PROGRAM_ADDRESSES } from "./constants";
 import type { CpAmmProgram } from "./programs/cpAmm";
@@ -26,16 +24,21 @@ export interface Programs {
 }
 
 /**
+ * Sencha coders.
+ */
+export const SENCHA_CODERS = buildCoderMap(IDLS, PROGRAM_ADDRESSES);
+
+/**
  * Sencha SDK.
  */
 export class SenchaSDK {
-  private readonly _router: Router;
+  public readonly router: Router;
 
   constructor(
-    public readonly provider: Provider,
+    public readonly provider: AugmentedProvider,
     public readonly programs: Programs
   ) {
-    this._router = new Router(provider, programs);
+    this.router = new Router(provider, programs);
   }
 
   /**
@@ -50,24 +53,11 @@ export class SenchaSDK {
   /**
    * Creates a new instance of the SDK with the given keypair.
    */
-  public withSigner(signer: Signer): SenchaSDK {
+  withSigner(signer: Signer): SenchaSDK {
     return SenchaSDK.load({
-      provider: new SolanaProvider(
-        this.provider.connection,
-        this.provider.broadcaster,
-        new SignerWallet(signer),
-        this.provider.opts
-      ),
+      provider: this.provider.withSigner(signer),
       addresses: mapValues(this.programs, (v) => v.programId),
     });
-  }
-
-  get programList(): Program[] {
-    return Object.values(this.programs) as Program[];
-  }
-
-  get router(): Router {
-    return this._router;
   }
 
   planTrade(trade: Trade, minimumAmountOut: TokenAmount): ActionPlan {
@@ -85,25 +75,11 @@ export class SenchaSDK {
     // Provider
     provider: Provider;
     // Addresses of each program.
-    addresses?: { [K in keyof Programs]?: Address };
+    addresses?: { [K in keyof Programs]?: PublicKey };
   }): SenchaSDK {
-    const anchorProvider = new AnchorProvider(
-      provider.connection,
-      provider.wallet,
-      provider.opts
-    );
+    const augProvider = new SolanaAugmentedProvider(provider);
     const allAddresses = { ...PROGRAM_ADDRESSES, ...addresses };
-    const programs: Programs = mapValues(
-      PROGRAM_ADDRESSES,
-      (_: Address, programName: keyof Programs): Program => {
-        const address = allAddresses[programName];
-        const idl = IDLS[programName];
-        invariant(idl, `Unknown IDL: ${programName}`);
-        invariant(address, `Unknown Address: ${programName}}`);
-
-        return new Program(idl, address, anchorProvider) as unknown as Program;
-      }
-    ) as unknown as Programs;
-    return new SenchaSDK(provider, programs);
+    const programs = newProgramMap<Programs>(provider, IDLS, allAddresses);
+    return new SenchaSDK(augProvider, programs);
   }
 }
