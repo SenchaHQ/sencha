@@ -1,6 +1,6 @@
 import type { Address } from "@project-serum/anchor";
 import { Program, Provider as AnchorProvider } from "@project-serum/anchor";
-import type { Event, EventParser, Provider } from "@saberhq/solana-contrib";
+import type { Provider } from "@saberhq/solana-contrib";
 import { SignerWallet, SolanaProvider } from "@saberhq/solana-contrib";
 import type { TokenAmount } from "@saberhq/token-utils";
 import type { PublicKey, Signer } from "@solana/web3.js";
@@ -12,7 +12,6 @@ import type { CpAmmProgram } from "./programs/cpAmm";
 import { CpammJSON } from "./programs/cpAmm";
 import type { ActionPlan, Trade } from "./router";
 import { Router } from "./router";
-import { EventParser as SEventParser } from "./utils/eventParser";
 import { SenchaFactory } from "./wrappers/cp-amm/factory";
 
 /**
@@ -71,45 +70,15 @@ export class SenchaSDK {
     return this._router;
   }
 
-  public planTrade(trade: Trade, minimumAmountOut: TokenAmount): ActionPlan {
+  planTrade(trade: Trade, minimumAmountOut: TokenAmount): ActionPlan {
     return this.router.planTrade(trade, minimumAmountOut);
-  }
-  public parseProgramLogs(logs: string[]): Event[] {
-    const events: Event[] = [];
-    this.programList.forEach((prog) => {
-      const parser = new SEventParser(prog.coder, prog.programId);
-      parser.parseLogs(logs, (event) => {
-        events.push(event);
-      });
-    });
-    return events;
-  }
-
-  /**
-   * Gets the event parser for the given event.
-   * @param program Name of program to parse.
-   * @returns Event parser
-   */
-  public getParser<E extends Event>(program: keyof Programs): EventParser<E> {
-    const parser = new SEventParser(
-      this.programs[program].coder,
-      this.programs[program].programId
-    );
-
-    return (logs) => {
-      const events: E[] = [];
-      parser.parseLogs(logs, (event) => {
-        events.push(event as E);
-      });
-      return events;
-    };
   }
 
   /**
    * Loads the SDK.
    * @returns
    */
-  public static load({
+  static load({
     provider,
     addresses = PROGRAM_ADDRESSES,
   }: {
