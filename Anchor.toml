@@ -1,3 +1,8 @@
+anchor_version = "0.18.0"
+
+[workspace]
+members = ["lib/*", "programs/*"]
+
 [registry]
 url = "https://anchor.projectserum.com"
 
