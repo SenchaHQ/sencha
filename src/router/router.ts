@@ -17,15 +17,12 @@ import { ActionPlan } from "./wrappers/actionPlan";
  * Saber Router SDK.
  */
 export class Router {
-  constructor(
-    public readonly provider: Provider,
-    public readonly programs: Programs
-  ) {}
+  constructor(readonly provider: Provider, readonly programs: Programs) {}
 
   /**
    * Creates a new instance of the Router with the given keypair.
    */
-  public withSigner(keypair: Signer): Router {
+  withSigner(keypair: Signer): Router {
     return Router.load({
       provider: new SolanaProvider(
         this.provider.connection,
@@ -45,7 +42,7 @@ export class Router {
    * @param minimumAmountOut
    * @returns
    */
-  public planTrade(trade: Trade, minimumAmountOut: TokenAmount): ActionPlan {
+  planTrade(trade: Trade, minimumAmountOut: TokenAmount): ActionPlan {
     return new ActionPlan(
       this,
       trade.inputAmount,
@@ -62,7 +59,7 @@ export class Router {
    * Loads the SDK.
    * @returns
    */
-  public static load({
+  static load({
     provider,
     addresses = PROGRAM_ADDRESSES,
   }: {

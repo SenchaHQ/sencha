@@ -98,42 +98,42 @@ export class Trade {
   /**
    * The route of the trade, i.e. which pairs the trade goes through.
    */
-  public readonly route: Route;
+  readonly route: Route;
   /**
    * The input amount for the trade assuming no slippage.
    */
-  public readonly inputAmount: TokenAmount;
+  readonly inputAmount: TokenAmount;
   /**
    * The output amount for the trade assuming no slippage.
    */
-  public readonly outputAmount: TokenAmount;
+  readonly outputAmount: TokenAmount;
   /**
    * The price expressed in terms of output amount/input amount.
    */
-  public readonly executionPrice: Price;
+  readonly executionPrice: Price;
   /**
    * The mid price after the trade executes assuming no slippage.
    */
-  public readonly nextMidPrice: Price;
+  readonly nextMidPrice: Price;
   /**
    * The percent difference between the mid price before the trade and the trade execution price.
    */
-  public readonly priceImpact: Percent;
+  readonly priceImpact: Percent;
   /**
    * Fees paid to the pairs.
    */
-  public readonly fees: readonly TokenAmount[];
+  readonly fees: readonly TokenAmount[];
 
   /**
    * Constructs an exact in trade with the given amount in and route
    * @param route route of the exact in trade
    * @param amountIn the amount being passed in
    */
-  public static exactIn(route: Route, amountIn: TokenAmount): Trade {
+  static exactIn(route: Route, amountIn: TokenAmount): Trade {
     return new Trade(route, amountIn);
   }
 
-  public constructor(route: Route, amount: TokenAmount) {
+  constructor(route: Route, amount: TokenAmount) {
     const amounts: TokenAmount[] = new Array(
       route.path.length
     ) as TokenAmount[];
@@ -184,7 +184,7 @@ export class Trade {
    * Get the minimum amount that must be received from this trade for the given slippage tolerance
    * @param slippageTolerance tolerance of unfavorable slippage from the execution price of this trade
    */
-  public minimumAmountOut(slippageTolerance: Percent): TokenAmount {
+  minimumAmountOut(slippageTolerance: Percent): TokenAmount {
     invariant(!slippageTolerance.lessThan(ZERO), "SLIPPAGE_TOLERANCE");
     const slippageAdjustedAmountOut = new Fraction(ONE)
       .add(slippageTolerance)
@@ -207,7 +207,7 @@ export class Trade {
    * @param originalAmountIn used in recursion; the original value of the tokenAmountIn parameter
    * @param bestTrades used in recursion; the current list of best trades
    */
-  public static bestTradeExactIn(
+  static bestTradeExactIn(
     pairs: AnyPair[],
     tokenAmountIn: TokenAmount,
     tokenOut: Token,
@@ -392,7 +392,7 @@ export class Trade {
    * Return the execution price after accounting for slippage tolerance
    * @param slippageTolerance the allowed tolerated slippage
    */
-  public worstExecutionPrice(slippageTolerance: Percent): Price {
+  worstExecutionPrice(slippageTolerance: Percent): Price {
     const minOut = this.minimumAmountOut(slippageTolerance);
     return new Price(
       this.inputAmount.token,

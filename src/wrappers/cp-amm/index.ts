@@ -41,9 +41,9 @@ export type ISeedPoolAccountsFn = (args: {
 
 export class CpAmmWrapper {
   constructor(
-    public readonly sdk: SenchaSDK,
-    public readonly key: PublicKey,
-    public readonly state: CpAmmState
+    readonly sdk: SenchaSDK,
+    readonly key: PublicKey,
+    readonly state: CpAmmState
   ) {}
 
   /**
@@ -60,7 +60,7 @@ export class CpAmmWrapper {
     return this.sdk.programs.CpAmm;
   }
 
-  public static async load({
+  static async load({
     sdk,
     key,
   }: {
@@ -100,7 +100,7 @@ export class CpAmmWrapper {
     return new CpAmmWrapper(sdk, info.accountId, state);
   }
 
-  public static async newFactory({
+  static async newFactory({
     sdk,
     baseKP = Keypair.generate(),
     payer = sdk.provider.wallet.publicKey,
@@ -309,7 +309,7 @@ export class CpAmmWrapper {
   /**
    * Creates the ATAs used for the instruction if necessary.
    */
-  private async getOrCreateATAs(
+  private async _getOrCreateATAs(
     userAuthority: PublicKey = this.provider.wallet.publicKey
   ) {
     return await getOrCreateATAs({
@@ -323,7 +323,7 @@ export class CpAmmWrapper {
     });
   }
 
-  private getCommonAccounts(
+  private _getCommonAccounts(
     userAuthority: PublicKey = this.provider.wallet.publicKey
   ) {
     return {
@@ -340,7 +340,7 @@ export class CpAmmWrapper {
    * Deposits LP tokens into a pool.
    * @returns
    */
-  public async deposit({
+  async deposit({
     poolTokenAmount,
     maximumAmountIn0,
     maximumAmountIn1,
@@ -354,7 +354,7 @@ export class CpAmmWrapper {
     const instructions: TransactionInstruction[] = [];
 
     const { accounts, instructions: ataInstructions } =
-      await this.getOrCreateATAs(userAuthority);
+      await this._getOrCreateATAs(userAuthority);
     instructions.push(...ataInstructions);
 
     instructions.push(
@@ -364,7 +364,7 @@ export class CpAmmWrapper {
         maximumAmountIn1,
         {
           accounts: {
-            ...this.getCommonAccounts(userAuthority),
+            ...this._getCommonAccounts(userAuthority),
             input0: {
               user: accounts.token0,
               reserve: this.state.token0.reserves,
@@ -382,7 +382,7 @@ export class CpAmmWrapper {
     return new TransactionEnvelope(this.provider, instructions);
   }
 
-  public async withdraw({
+  async withdraw({
     poolTokenAmount,
     minimumAmountOut0,
     minimumAmountOut1,
@@ -396,7 +396,7 @@ export class CpAmmWrapper {
     const instructions: TransactionInstruction[] = [];
 
     const { accounts, instructions: ataInstructions } =
-      await this.getOrCreateATAs(userAuthority);
+      await this._getOrCreateATAs(userAuthority);
     instructions.push(...ataInstructions);
 
     instructions.push(
@@ -406,7 +406,7 @@ export class CpAmmWrapper {
         minimumAmountOut1,
         {
           accounts: {
-            ...this.getCommonAccounts(userAuthority),
+            ...this._getCommonAccounts(userAuthority),
             output0: {
               user: accounts.token0,
               reserve: this.state.token0.reserves,
@@ -426,7 +426,7 @@ export class CpAmmWrapper {
     return new TransactionEnvelope(this.provider, instructions);
   }
 
-  public async swap({
+  async swap({
     amountIn,
     minAmountOut,
     userAuthority = this.provider.wallet.publicKey,
@@ -451,7 +451,7 @@ export class CpAmmWrapper {
     instructions.push(
       this.program.instruction.swap(amountIn, minAmountOut, {
         accounts: {
-          ...this.getCommonAccounts(userAuthority),
+          ...this._getCommonAccounts(userAuthority),
           input: {
             user: accounts.token0,
             reserve: this.state.token0.reserves,

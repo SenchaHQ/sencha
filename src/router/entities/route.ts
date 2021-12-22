@@ -6,14 +6,10 @@ import invariant from "tiny-invariant";
 import type { AnyPair } from "./pair";
 
 export class Route {
-  public readonly path: Token[];
-  public readonly output: Token;
+  readonly path: Token[];
+  readonly output: Token;
 
-  public constructor(
-    public readonly pairs: AnyPair[],
-    public readonly input: Token,
-    output: Token
-  ) {
+  constructor(readonly pairs: AnyPair[], readonly input: Token, output: Token) {
     invariant(pairs.length > 0, "PAIRS");
     const firstPair = pairs[0];
     invariant(firstPair, "PAIRS");
@@ -51,7 +47,7 @@ export class Route {
     return this.asPrice();
   }
 
-  public asPrice(): Price {
+  asPrice(): Price {
     const prices: Price[] = [];
     for (const [i, pair] of this.pairs.entries()) {
       const element = this.path[i];
@@ -81,7 +77,7 @@ export class Route {
     return price;
   }
 
-  public get network(): Network {
+  get network(): Network {
     return this.input.network;
   }
 }
