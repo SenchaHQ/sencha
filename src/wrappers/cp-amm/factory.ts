@@ -30,8 +30,8 @@ import type { PendingSwap } from "./types";
  */
 export class SenchaFactory {
   constructor(
-    public readonly sdk: SenchaSDK,
-    public readonly factory: PublicKey = DEFAULT_FACTORY
+    readonly sdk: SenchaSDK,
+    readonly factory: PublicKey = DEFAULT_FACTORY
   ) {}
 
   /**

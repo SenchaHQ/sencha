@@ -32,11 +32,11 @@ export const SENCHA_CODERS = buildCoderMap(IDLS, PROGRAM_ADDRESSES);
  * Sencha SDK.
  */
 export class SenchaSDK {
-  public readonly router: Router;
+  readonly router: Router;
 
   constructor(
-    public readonly provider: AugmentedProvider,
-    public readonly programs: Programs
+    readonly provider: AugmentedProvider,
+    readonly programs: Programs
   ) {
     this.router = new Router(provider, programs);
   }

@@ -29,22 +29,22 @@ export type Action = {
 
 export class ActionPlan {
   constructor(
-    public readonly router: Router,
-    public readonly inputAmount: TokenAmount,
-    public readonly minimumAmountOut: TokenAmount,
-    public readonly actions: Action[] = []
+    readonly router: Router,
+    readonly inputAmount: TokenAmount,
+    readonly minimumAmountOut: TokenAmount,
+    readonly actions: Action[] = []
   ) {}
 
   get program(): CpAmmProgram {
     return this.router.programs.CpAmm;
   }
 
-  public addAction(...actions: Action[]): ActionPlan {
+  addAction(...actions: Action[]): ActionPlan {
     this.actions.push(...actions);
     return this;
   }
 
-  public async buildTX(): Promise<TransactionEnvelope> {
+  async buildTX(): Promise<TransactionEnvelope> {
     const { provider } = this.router;
     const user = provider.wallet.publicKey;
 

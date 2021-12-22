@@ -31,38 +31,35 @@ export class Pair<P = unknown> {
    * @param liquidityToken
    * @param strategy
    */
-  public constructor(
-    public readonly pool: P,
-    private readonly strategy: PoolStrategy<P>
-  ) {}
+  constructor(readonly pool: P, private readonly _strategy: PoolStrategy<P>) {}
 
   /**
    * Returns true if the token is either token0 or token1
    * @param token to check
    */
-  public involvesToken(token: Token): boolean {
+  involvesToken(token: Token): boolean {
     return token.equals(this.token0) || token.equals(this.token1);
   }
 
   /**
    * Returns the current mid price of the pair in terms of token0, i.e. the ratio of reserve1 to reserve0
    */
-  public get token0Price(): Price {
+  get token0Price(): Price {
     return this.token1Price.invert();
   }
 
   /**
    * Returns the current mid price of the pair in terms of token1, i.e. the ratio of reserve0 to reserve1
    */
-  public get token1Price(): Price {
-    return this.strategy.getPriceOfToken1(this.pool);
+  get token1Price(): Price {
+    return this._strategy.getPriceOfToken1(this.pool);
   }
 
   /**
    * Return the price of the given token in terms of the other token in the pair.
    * @param token token to return price of
    */
-  public priceOf(token: Token): Price {
+  priceOf(token: Token): Price {
     invariant(this.involvesToken(token), "TOKEN");
     return token.equals(this.token0) ? this.token0Price : this.token1Price;
   }
@@ -70,23 +67,23 @@ export class Pair<P = unknown> {
   /**
    * Returns the chain ID of the tokens in the pair.
    */
-  public get network(): Network {
+  get network(): Network {
     return this.token0.network;
   }
 
-  public get token0(): Token {
-    return this.strategy.getToken0(this.pool);
+  get token0(): Token {
+    return this._strategy.getToken0(this.pool);
   }
 
-  public get token1(): Token {
-    return this.strategy.getToken1(this.pool);
+  get token1(): Token {
+    return this._strategy.getToken1(this.pool);
   }
 
-  public hasZeroLiquidity(): boolean {
-    return this.strategy.hasZeroLiquidity(this.pool);
+  hasZeroLiquidity(): boolean {
+    return this._strategy.hasZeroLiquidity(this.pool);
   }
 
-  public getOutputAmount(
+  getOutputAmount(
     inputAmount: TokenAmount
   ): Omit<PoolOutputResult<P>, "pair"> & { pair: AnyPair } {
     invariant(this.involvesToken(inputAmount.token), "TOKEN");
@@ -97,22 +94,22 @@ export class Pair<P = unknown> {
       amount: outputAmount,
       fees,
       pair: nextPair,
-    } = this.strategy.getOutputAmount(this.pool, inputAmount);
+    } = this._strategy.getOutputAmount(this.pool, inputAmount);
     if (JSBI.EQ(outputAmount.raw, ZERO)) {
       throw new Error("insufficient input amount");
     }
     return { amount: outputAmount, fees, pair: nextPair };
   }
 
-  public asAction(outputToken: Token): Action {
-    return this.strategy.asAction(this.pool, outputToken);
+  asAction(outputToken: Token): Action {
+    return this._strategy.asAction(this.pool, outputToken);
   }
 
-  public isSenchaPair(): this is Pair<SenchaPool> {
+  isSenchaPair(): this is Pair<SenchaPool> {
     return "swap" in this.pool;
   }
 
-  public static fromSenchaSwap = pairFromSenchaSwap;
+  static fromSenchaSwap = pairFromSenchaSwap;
 }
 
 export type AnyPair = Omit<Pair<unknown>, "pool">;
