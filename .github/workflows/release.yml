@@ -103,7 +103,7 @@ jobs:
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
 
       - name: Build programs
-        run: nix shell .#ci --command anchor build -v
+        run: nix shell .#ci --command anchor build --verifiable
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
