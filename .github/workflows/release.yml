@@ -8,8 +8,8 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  SOLANA_VERSION: "1.7.11"
-  RUST_TOOLCHAIN: nightly-2021-10-14
+  SOLANA_VERSION: "1.8.9"
+  RUST_TOOLCHAIN: nightly-2021-12-21
   NPM_PUBLISH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
 
 jobs:
@@ -29,20 +29,22 @@ jobs:
         uses: cachix/cachix-action@v10
         with:
           name: matcha
-          extraPullNames: quarry
+          extraPullNames: quarry, saber
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - name: Setup Node
         uses: actions/setup-node@v2
-        with:
-          always-auth: true
-          node-version: 14.x
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
       - name: Yarn Cache
         uses: actions/cache@v2
         with:
-          path: ./.yarn
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-modules-
+            ${{ runner.os }}-yarn-
+
       - name: Install Yarn dependencies
         run: yarn install
       - name: Parse IDLs
@@ -58,6 +60,20 @@ jobs:
     name: Release crate on crates.io
     steps:
       - uses: actions/checkout@v2
+
+      - uses: cachix/install-nix-action@v16
+        with:
+          install_url: https://nixos-nix-install-tests.cachix.org/serve/i6laym9jw3wg9mw6ncyrk6gjx4l34vvx/install
+          install_options: "--tarball-url-prefix https://nixos-nix-install-tests.cachix.org/serve"
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v10
+        with:
+          name: matcha
+          extraPullNames: quarry, saber
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+
       - name: Install Rust nightly
         uses: actions-rs/toolchain@v1
         with:
@@ -65,10 +81,8 @@ jobs:
           profile: minimal
           toolchain: ${{ env.RUST_TOOLCHAIN }}
       - uses: Swatinem/rust-cache@v1
-      - name: Install cargo-workspaces
-        run: cargo install cargo-workspaces || true
       - name: Publish crates
-        run: cargo ws publish --from-git --yes --skip-published --token ${{ secrets.CARGO_PUBLISH_TOKEN }}
+        run: nix shell .#ci --command cargo ws publish --from-git --yes --skip-published --token ${{ secrets.CARGO_PUBLISH_TOKEN }}
 
   release-binaries:
     runs-on: ubuntu-latest
@@ -85,11 +99,11 @@ jobs:
         uses: cachix/cachix-action@v10
         with:
           name: matcha
-          extraPullNames: quarry
+          extraPullNames: quarry, saber
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
 
       - name: Build programs
-        run: nix shell .#ci --command anchor build -v
+        run: nix shell .#ci --command anchor build --verifiable
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
@@ -116,13 +130,17 @@ jobs:
           name: matcha
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
 
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
       - name: Yarn Cache
         uses: actions/cache@v2
         with:
-          path: ./.yarn
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-modules-
+            ${{ runner.os }}-yarn-
+
       - name: Install Yarn dependencies
         run: yarn install
       - name: Parse IDLs
