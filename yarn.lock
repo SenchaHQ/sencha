@@ -16,38 +16,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/helper-validator-identifier@npm:^7.14.9":
-  version: 7.14.9
-  resolution: "@babel/helper-validator-identifier@npm:7.14.9"
-  checksum: 58552531a7674363e74672434c312ddaf1545b8a43308e1a7f38db58bf79c796c095a6dab6a6105eb0d783b97441f6cbb525bb887f29a35f232fcdbd8cb240dc
-  languageName: node
-  linkType: hard
-
-"@babel/parser@npm:^7.1.0":
-  version: 7.15.4
-  resolution: "@babel/parser@npm:7.15.4"
-  bin:
-    parser: ./bin/babel-parser.js
-  checksum: 4ab6794fc7eacf93d4792675c7ab0fb5c73e697a2ef9a85248a0797d1a0b42e97d6112983ef014ace63c2bbb49b60668793a9a334f9bd8bd9e1fc1c76a7f7ce9
-  languageName: node
-  linkType: hard
-
 "@babel/runtime@npm:^7.10.5, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.5":
   version: 7.15.3
   resolution: "@babel/runtime@npm:7.15.3"
   dependencies:
     regenerator-runtime: ^0.13.4
   checksum: 2f0b8d2d4e36035ab1d84af0ec26aafa098536870f27c8e07de0a0e398f7a394fdea68a88165535ffb52ded6a68912bdc3450bdf91f229eb132e1c89470789f5
-  languageName: node
-  linkType: hard
-
-"@babel/types@npm:^7.0.0, @babel/types@npm:^7.3.0, @babel/types@npm:^7.8.3":
-  version: 7.15.4
-  resolution: "@babel/types@npm:7.15.4"
-  dependencies:
-    "@babel/helper-validator-identifier": ^7.14.9
-    to-fast-properties: ^2.0.0
-  checksum: dac7d733edf2102e97f197929693fae6025161f3edda5a0f621f69e9d0741b8596c6f2152492bef869b55d0205e214867e8730f389283e85432b8f093e295c4b
   languageName: node
   linkType: hard
 
@@ -326,9 +300,7 @@ __metadata:
     "@saberhq/eslint-config": ^1.11.3
     "@saberhq/solana-contrib": ^1.11.3
     "@saberhq/token-utils": ^1.11.3
-    "@solana/spl-token-registry": ^0.2.544
     "@solana/web3.js": ^1.31.0
-    "@types/babel__core": ^7.1.17
     "@types/bn.js": ^5.1.0
     "@types/chai-as-promised": ^7.1.4
     "@types/lodash.chunk": ^4.2.6
@@ -359,13 +331,13 @@ __metadata:
     typedoc: ^0.22.10
     typescript: ^4.5.4
   peerDependencies:
-    "@project-serum/anchor": ^0.17.1-beta.1
-    "@saberhq/anchor-contrib": ^1.3.18
-    "@saberhq/solana-contrib": ^1.3.18
-    "@saberhq/token-utils": ^1.3.18
+    "@project-serum/anchor": ^0.19
+    "@saberhq/anchor-contrib": ^1.11
+    "@saberhq/solana-contrib": ^1.11
+    "@saberhq/token-utils": ^1.11
     "@solana/web3.js": ^1.29.2
     bn.js: ^5.2.0
-    jsbi: ^3.2.5
+    jsbi: ^3 || ^4
   languageName: unknown
   linkType: soft
 
@@ -384,15 +356,6 @@ __metadata:
   dependencies:
     buffer: ~6.0.3
   checksum: f244e9c42425477ded1fb5295252d7cb093cd591a14552e89271000ad5c01a5b5c0f2f83c7253d640414b600d4b31d95e9f3fcaec6d8280d3d6cb7f3d0a88565
-  languageName: node
-  linkType: hard
-
-"@solana/spl-token-registry@npm:^0.2.544":
-  version: 0.2.544
-  resolution: "@solana/spl-token-registry@npm:0.2.544"
-  dependencies:
-    cross-fetch: 3.0.6
-  checksum: f951c2bc0cedac5bb61006c55f71cf56b3723705ce720b95adee1b9be6c2d488884a747682cd5411e15643ea34259930504c5221125d51a0ecfb19ecb5f314ba
   languageName: node
   linkType: hard
 
@@ -505,47 +468,6 @@ __metadata:
   version: 1.0.2
   resolution: "@tsconfig/node16@npm:1.0.2"
   checksum: ca94d3639714672bbfd55f03521d3f56bb6a25479bd425da81faf21f13e1e9d15f40f97377dedbbf477a5841c5b0c8f4cd1b391f33553d750b9202c54c2c07aa
-  languageName: node
-  linkType: hard
-
-"@types/babel__core@npm:^7.1.17":
-  version: 7.1.17
-  resolution: "@types/babel__core@npm:7.1.17"
-  dependencies:
-    "@babel/parser": ^7.1.0
-    "@babel/types": ^7.0.0
-    "@types/babel__generator": "*"
-    "@types/babel__template": "*"
-    "@types/babel__traverse": "*"
-  checksum: 0108efab8acb6a8e0aab6f8113d5ef1fc4b58d40737aa70a3ee83112959e0880e5548374e7edb562e4e837cde4ae47265348b04eb7e684283b0dea418d013420
-  languageName: node
-  linkType: hard
-
-"@types/babel__generator@npm:*":
-  version: 7.6.3
-  resolution: "@types/babel__generator@npm:7.6.3"
-  dependencies:
-    "@babel/types": ^7.0.0
-  checksum: 0aa1881c47e3e471cabb9183ae42176591b168a6fe4714d205aec33a7e480d65a8a1ba7fcd9678337aadc34059dc5baa04841e5adfbbe67ae33bad79e7633b8e
-  languageName: node
-  linkType: hard
-
-"@types/babel__template@npm:*":
-  version: 7.4.1
-  resolution: "@types/babel__template@npm:7.4.1"
-  dependencies:
-    "@babel/parser": ^7.1.0
-    "@babel/types": ^7.0.0
-  checksum: 649fe8b42c2876be1fd28c6ed9b276f78152d5904ec290b6c861d9ef324206e0a5c242e8305c421ac52ecf6358fa7e32ab7a692f55370484825c1df29b1596ee
-  languageName: node
-  linkType: hard
-
-"@types/babel__traverse@npm:*":
-  version: 7.14.2
-  resolution: "@types/babel__traverse@npm:7.14.2"
-  dependencies:
-    "@babel/types": ^7.3.0
-  checksum: a797ea09c72307569e3ee08aa3900ca744ce3091114084f2dc59b67a45ee7d01df7865252790dbfa787a7915ce892cdc820c9b920f3683292765fc656b08dc63
   languageName: node
   linkType: hard
 
@@ -1567,15 +1489,6 @@ __metadata:
   version: 1.1.1
   resolution: "create-require@npm:1.1.1"
   checksum: a9a1503d4390d8b59ad86f4607de7870b39cad43d929813599a23714831e81c520bddf61bcdd1f8e30f05fd3a2b71ae8538e946eb2786dc65c2bbc520f692eff
-  languageName: node
-  linkType: hard
-
-"cross-fetch@npm:3.0.6":
-  version: 3.0.6
-  resolution: "cross-fetch@npm:3.0.6"
-  dependencies:
-    node-fetch: 2.6.1
-  checksum: fc855278c3bae191a00003eed618a40b48dfadf25ccf707ffdb173add97921f89ef459815bc5cbd20554de713da4f0a2c1258f83e60895efdeab5a7834c6e3b6
   languageName: node
   linkType: hard
 
@@ -4514,13 +4427,6 @@ resolve@^1.20.0:
   version: 1.2.0
   resolution: "tiny-invariant@npm:1.2.0"
   checksum: e09a718a7c4a499ba592cdac61f015d87427a0867ca07f50c11fd9b623f90cdba18937b515d4a5e4f43dac92370498d7bdaee0d0e7a377a61095e02c4a92eade
-  languageName: node
-  linkType: hard
-
-"to-fast-properties@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "to-fast-properties@npm:2.0.0"
-  checksum: be2de62fe58ead94e3e592680052683b1ec986c72d589e7b21e5697f8744cdbf48c266fa72f6c15932894c10187b5f54573a3bcf7da0bfd964d5caf23d436168
   languageName: node
   linkType: hard
 
