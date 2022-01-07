@@ -1,4 +1,4 @@
-import { TokenAmount, ZERO } from "@saberhq/token-utils";
+import { TokenAmount } from "@saberhq/token-utils";
 import JSBI from "jsbi";
 
 import type { IExchangeInfo } from "..";
@@ -35,10 +35,6 @@ export const calculateEstimatedSwapOutputAmount = (
     toReserves.amount.token,
     outputBeforeFees
   );
-
-  if (JSBI.equal(outputAmountBeforeFees.raw, ZERO)) {
-    throw new Error("insufficient pool liquidity");
-  }
 
   // Note that it is may be ideal for fees to be charged on the known user-specified amount
   // so that it is easier to derive stats without greater access to historical chain data
