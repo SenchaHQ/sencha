@@ -33,6 +33,8 @@ import type { CpAmmState, PendingSwap } from "./types";
 export * from "./fee";
 export * from "./parsers";
 export * from "./pda";
+
+// TODO: unsure if this is ESM friendly
 export * from "./types";
 
 export type ISeedPoolAccountsFn = (args: {
