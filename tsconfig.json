@@ -14,7 +14,6 @@
     "resolveJsonModule": true,
     "lib": ["ES2019"],
     "importHelpers": true,
-    "isolatedModules": true,
 
     "noEmit": true
   },
