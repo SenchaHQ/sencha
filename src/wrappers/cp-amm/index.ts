@@ -1,5 +1,6 @@
 import type { Provider } from "@saberhq/solana-contrib";
 import { TransactionEnvelope } from "@saberhq/solana-contrib";
+import type { TokenAmount } from "@saberhq/token-utils";
 import {
   createInitMintInstructions,
   createTokenAccount,
@@ -432,8 +433,8 @@ export class CpAmmWrapper {
     userAuthority = this.provider.wallet.publicKey,
   }: {
     userAuthority?: PublicKey;
-    amountIn: BN;
-    minAmountOut: BN;
+    amountIn: TokenAmount;
+    minAmountOut: TokenAmount;
   }): Promise<TransactionEnvelope> {
     const instructions: TransactionInstruction[] = [];
 
@@ -448,19 +449,25 @@ export class CpAmmWrapper {
     });
     instructions.push(...ataInstructions);
 
+    const [inputToken, outputToken] = amountIn.token.mintAccount.equals(
+      this.state.token0.mint
+    )
+      ? (["token0", "token1"] as const)
+      : (["token1", "token0"] as const);
+
     instructions.push(
-      this.program.instruction.swap(amountIn, minAmountOut, {
+      this.program.instruction.swap(amountIn.toU64(), minAmountOut.toU64(), {
         accounts: {
           ...this._getCommonAccounts(userAuthority),
           input: {
-            user: accounts.token0,
-            reserve: this.state.token0.reserves,
-            fees: this.state.token0.adminFees,
+            user: accounts[inputToken],
+            reserve: this.state[inputToken].reserves,
+            fees: this.state[inputToken].adminFees,
           },
           output: {
-            user: accounts.token1,
-            reserve: this.state.token1.reserves,
-            fees: this.state.token1.adminFees,
+            user: accounts[outputToken],
+            reserve: this.state[outputToken].reserves,
+            fees: this.state[outputToken].adminFees,
           },
         },
       })
