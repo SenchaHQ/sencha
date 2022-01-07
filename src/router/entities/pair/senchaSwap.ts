@@ -1,5 +1,5 @@
 import type { Percent, TokenAmount } from "@saberhq/token-utils";
-import { Price, ZERO } from "@saberhq/token-utils";
+import { Price } from "@saberhq/token-utils";
 import type { PublicKey } from "@solana/web3.js";
 import invariant from "tiny-invariant";
 
@@ -50,7 +50,7 @@ const poolStrategy: PoolStrategy<CpAmmPool> = {
       inputAmount
     );
 
-    invariant(!outputAmount.equalTo(ZERO), "POOL_ZERO_LIQUIDITY");
+    invariant(outputAmount.greaterThan("0"), "POOL_ZERO_LIQUIDITY");
 
     return {
       amount: outputAmount,
