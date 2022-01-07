@@ -64,27 +64,22 @@ const poolStrategy: PoolStrategy<CpAmmPool> = {
     const d = JSBI.add(fromReserves.amount.raw, inputAmount.raw);
 
     const out = JSBI.divide(n, d);
+    const outputAmountWithoutFees = new TokenAmount(
+      toReserves.amount.token,
+      out
+    );
 
+    if (JSBI.equal(outputAmountWithoutFees.raw, ZERO)) {
+      throw new Error("insufficient pool liquidity");
+    }
+
+    // Note that it is may be ideal for fees to be charged on the known user-specified amount
+    // so that it is easier to derive stats without greater access to historical chain data
     const outFees = JSBI.BigInt(
       exchangeFees.trade.asFraction.multiply(out).toFixed(0)
     );
-    // TODO: fees removed from outputAmount until I figure out how to calculate sub
-    // const outFees = new TokenAmount(
-    //   toReserves.amount.token,
-    //   exchangeFees.trade.asFraction.multiply(out).toFixed(0)
-    // );
-
     const outFeesAmount = new TokenAmount(toReserves.amount.token, outFees);
-
-    const outputAmount = new TokenAmount(
-      toReserves.amount.token,
-      out
-      // JSBI.subtract(out, outFees)
-    );
-
-    if (JSBI.equal(outputAmount.raw, ZERO)) {
-      throw new Error("insufficient pool liquidity");
-    }
+    const outputAmount = outputAmountWithoutFees.subtract(outFeesAmount);
 
     return {
       amount: outputAmount,
