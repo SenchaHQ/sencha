@@ -1,9 +1,10 @@
-import type { Percent } from "@saberhq/token-utils";
-import { Price, TokenAmount } from "@saberhq/token-utils";
+import type { Percent, TokenAmount } from "@saberhq/token-utils";
+import { Price, ZERO } from "@saberhq/token-utils";
 import type { PublicKey } from "@solana/web3.js";
-import JSBI from "jsbi";
+import invariant from "tiny-invariant";
 
 import type { CpAmmWrapper } from "../../..";
+import { calculateEstimatedSwapOutputAmount } from "../../../calculator/amounts";
 import type { PoolStrategy } from ".";
 import { Pair } from ".";
 
@@ -40,55 +41,20 @@ export interface CpAmmPool {
   exchange: IExchangeInfo;
 }
 
-const ZERO = JSBI.BigInt(0);
-
 // TODO: add cp-amm calculation methods to sencha-sdk
 const poolStrategy: PoolStrategy<CpAmmPool> = {
   getOutputAmount: ({ exchange, ...rest }, inputAmount) => {
     const [reserveA, reserveB] = exchange.reserves;
-
-    const [fromReserves, toReserves] = inputAmount.token.equals(
-      exchange.reserves[0].amount.token
-    )
-      ? [exchange.reserves[0], exchange.reserves[1]]
-      : [exchange.reserves[1], exchange.reserves[0]];
-
-    const exchangeFees = exchange.fees;
-
-    if (fromReserves.amount.equalTo(ZERO) || toReserves.amount.equalTo(ZERO)) {
-      // TODO: typed errors
-      throw new Error("insufficient reserves");
-    }
-
-    const n = JSBI.multiply(toReserves.amount.raw, inputAmount.raw);
-    const d = JSBI.add(fromReserves.amount.raw, inputAmount.raw);
-
-    const out = JSBI.divide(n, d);
-
-    const outFees = JSBI.BigInt(
-      exchangeFees.trade.asFraction.multiply(out).toFixed(0)
-    );
-    // TODO: fees removed from outputAmount until I figure out how to calculate sub
-    // const outFees = new TokenAmount(
-    //   toReserves.amount.token,
-    //   exchangeFees.trade.asFraction.multiply(out).toFixed(0)
-    // );
-
-    const outFeesAmount = new TokenAmount(toReserves.amount.token, outFees);
-
-    const outputAmount = new TokenAmount(
-      toReserves.amount.token,
-      out
-      // JSBI.subtract(out, outFees)
+    const { outputAmount, tradeFee } = calculateEstimatedSwapOutputAmount(
+      exchange,
+      inputAmount
     );
 
-    if (JSBI.equal(outputAmount.raw, ZERO)) {
-      throw new Error("insufficient pool liquidity");
-    }
+    invariant(!outputAmount.equalTo(ZERO), "POOL_ZERO_LIQUIDITY");
 
     return {
       amount: outputAmount,
-      fees: outFeesAmount,
+      fees: tradeFee,
       pair: pairFromSenchaSwap({
         ...rest,
         exchange: {

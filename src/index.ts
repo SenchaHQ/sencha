@@ -1,3 +1,4 @@
+export * from "./calculator";
 export * from "./constants";
 export * as programs from "./programs";
 export * from "./programs";

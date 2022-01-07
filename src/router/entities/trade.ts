@@ -5,7 +5,6 @@ import {
   Percent,
   Price,
   TokenAmount,
-  ZERO,
 } from "@saberhq/token-utils";
 import invariant from "tiny-invariant";
 
@@ -185,7 +184,10 @@ export class Trade {
    * @param slippageTolerance tolerance of unfavorable slippage from the execution price of this trade
    */
   minimumAmountOut(slippageTolerance: Percent): TokenAmount {
-    invariant(!slippageTolerance.lessThan(ZERO), "SLIPPAGE_TOLERANCE");
+    // TODO: fix upstream (parseBigintIsh)
+    // https://github.com/GoogleChromeLabs/jsbi/compare/85d3d1656f8255486befae89d979b8dce612e900...b1b384155d30418078fe63faa93596f5948fbb9b#diff-9eedabcdf3d697813b37cc3b568bf4f09d32ad65829d2bd799c6353f375d1d3fR76
+    invariant(!slippageTolerance.lessThan("0"), "SLIPPAGE_TOLERANCE");
+
     const slippageAdjustedAmountOut = new Fraction(ONE)
       .add(slippageTolerance)
       .invert()

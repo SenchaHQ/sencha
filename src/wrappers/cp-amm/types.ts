@@ -16,8 +16,6 @@ export type PendingSwap = {
   swap: PublicKey;
   initAccountsTX: TransactionEnvelope;
   initSwapTX: TransactionEnvelope;
-  // tokenA: SwapTokenInfo;
-  // tokenB: SwapTokenInfo;
 };
 
 export interface CpAmmState extends Omit<SwapInfoData, "fees"> {
