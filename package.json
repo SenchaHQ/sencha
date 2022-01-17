@@ -18,7 +18,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "rimraf dist && tsc -P tsconfig.cjs.json && tsc -P tsconfig.build.json",
+    "build": "rm -fr dist && tsc -P tsconfig.cjs.json && tsc -P tsconfig.build.json",
     "build:cjs": "tsc -P tsconfig.cjs.json",
     "build:all": "captain build && npm run idl:generate && npm run build",
     "build:programs": "captain build",
