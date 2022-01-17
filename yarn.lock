@@ -293,6 +293,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@saberhq/tsconfig@npm:^1.12.30":
+  version: 1.12.30
+  resolution: "@saberhq/tsconfig@npm:1.12.30"
+  checksum: 763d028663e947784f20eec27fd04d7782bfcd2ca6632f2a0dfe2050a026900cbf0e828a1f1c6ffd83204e6b2564854acd5a21ffc39736505b24209966753568
+  languageName: node
+  linkType: hard
+
 "@senchahq/sencha-sdk@workspace:.":
   version: 0.0.0-use.local
   resolution: "@senchahq/sencha-sdk@workspace:."
@@ -304,6 +311,7 @@ __metadata:
     "@saberhq/eslint-config": ^1.12.30
     "@saberhq/solana-contrib": ^1.12.30
     "@saberhq/token-utils": ^1.12.30
+    "@saberhq/tsconfig": ^1.12.30
     "@solana/web3.js": ^1.31.0
     "@types/bn.js": ^5.1.0
     "@types/chai-as-promised": ^7.1.4
