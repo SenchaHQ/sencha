@@ -2,7 +2,7 @@
 name = "cpamm"
 version = "0.9.4"
 description = "Sencha constant-product automated market maker."
-edition = "2018"
+edition = "2021"
 homepage = "https://sencha.so"
 repository = "https://github.com/SenchaHQ/sencha"
 authors = ["Johanna Johansson <jj@sencha.so>"]
@@ -23,5 +23,5 @@ default = []
 anchor-lang = ">=0.17.0"
 anchor-spl = ">=0.17.0"
 num-traits = "0.2"
-vipers = "1.5.3"
+vipers = "^1.5.7"
 xyk = { path = "./lib/xyk", version = "0.1.0" }
