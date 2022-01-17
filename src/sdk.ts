@@ -3,7 +3,6 @@ import type { AugmentedProvider, Provider } from "@saberhq/solana-contrib";
 import { SolanaAugmentedProvider } from "@saberhq/solana-contrib";
 import type { TokenAmount } from "@saberhq/token-utils";
 import type { PublicKey, Signer } from "@solana/web3.js";
-import mapValues from "lodash.mapvalues";
 
 import { DEFAULT_FACTORY, PROGRAM_ADDRESSES } from "./constants";
 import type { CpAmmProgram } from "./programs/cpAmm";
@@ -56,7 +55,7 @@ export class SenchaSDK {
   withSigner(signer: Signer): SenchaSDK {
     return SenchaSDK.load({
       provider: this.provider.withSigner(signer),
-      addresses: mapValues(this.programs, (v) => v.programId),
+      addresses: PROGRAM_ADDRESSES,
     });
   }
 

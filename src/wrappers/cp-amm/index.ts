@@ -1,6 +1,6 @@
 import type { Provider } from "@saberhq/solana-contrib";
 import { TransactionEnvelope } from "@saberhq/solana-contrib";
-import type { TokenAmount } from "@saberhq/token-utils";
+import type { TokenAmount, u64 } from "@saberhq/token-utils";
 import {
   createInitMintInstructions,
   createTokenAccount,
@@ -15,7 +15,6 @@ import type {
   TransactionInstruction,
 } from "@solana/web3.js";
 import { Keypair, SystemProgram } from "@solana/web3.js";
-import type BN from "bn.js";
 
 import type { SenchaSDK } from "../..";
 import { DEFAULT_FACTORY } from "../../constants";
@@ -349,9 +348,9 @@ export class CpAmmWrapper {
     maximumAmountIn1,
     userAuthority = this.provider.wallet.publicKey,
   }: {
-    poolTokenAmount: BN;
-    maximumAmountIn0: BN;
-    maximumAmountIn1: BN;
+    poolTokenAmount: u64;
+    maximumAmountIn0: u64;
+    maximumAmountIn1: u64;
     userAuthority?: PublicKey;
   }): Promise<TransactionEnvelope> {
     const instructions: TransactionInstruction[] = [];
@@ -391,9 +390,9 @@ export class CpAmmWrapper {
     minimumAmountOut1,
     userAuthority = this.provider.wallet.publicKey,
   }: {
-    poolTokenAmount: BN;
-    minimumAmountOut0: BN;
-    minimumAmountOut1: BN;
+    poolTokenAmount: u64;
+    minimumAmountOut0: u64;
+    minimumAmountOut1: u64;
     userAuthority?: PublicKey;
   }): Promise<TransactionEnvelope> {
     const instructions: TransactionInstruction[] = [];

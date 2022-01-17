@@ -314,7 +314,6 @@ __metadata:
     "@saberhq/tsconfig": ^1.12.30
     "@solana/web3.js": ^1.31.0
     "@types/bn.js": ^5.1.0
-    "@types/chai-as-promised": ^7.1.4
     "@types/lodash.chunk": ^4.2.6
     "@types/lodash.mapvalues": ^4.6.6
     "@types/lodash.zip": ^4.2.6
@@ -323,7 +322,6 @@ __metadata:
     "@types/rimraf": ^3.0.2
     bn.js: ^5.2.0
     chai: ^4.3.4
-    chai-bn: ^0.3.0
     eslint: ^8.7.0
     eslint-import-resolver-node: ^0.3.6
     eslint-plugin-import: ^2.25.4
@@ -331,12 +329,10 @@ __metadata:
     jsbi: ^4.1.0
     lint-staged: ^12.1.7
     lodash.chunk: ^4.2.0
-    lodash.mapvalues: ^4.6.0
     lodash.zip: ^4.2.0
     mocha: 9.1.4
     prettier: ^2.5.1
     prettier-plugin-toml: ^0.3.1
-    rimraf: ^3.0.2
     tiny-invariant: ^1.2.0
     ts-node: ^10.4.0
     tslib: ^2.3.1

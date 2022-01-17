@@ -1,7 +1,5 @@
 /// <reference types="mocha" />
 
-import "chai-bn";
-
 import { expectTX } from "@saberhq/chai-solana";
 import {
   PendingTransaction,

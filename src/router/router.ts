@@ -1,10 +1,8 @@
-import type { Address } from "@project-serum/anchor";
-import { Program, Provider as AnchorProvider } from "@project-serum/anchor";
+import { newProgramMap } from "@saberhq/anchor-contrib";
 import type { Provider } from "@saberhq/solana-contrib";
 import { SignerWallet, SolanaProvider } from "@saberhq/solana-contrib";
 import type { TokenAmount } from "@saberhq/token-utils";
-import type { Signer } from "@solana/web3.js";
-import mapValues from "lodash.mapvalues";
+import type { PublicKey, Signer } from "@solana/web3.js";
 import invariant from "tiny-invariant";
 
 import type { Programs } from "../";
@@ -30,7 +28,6 @@ export class Router {
         new SignerWallet(keypair),
         this.provider.opts
       ),
-      addresses: mapValues(this.programs, (v) => v.programId),
     });
   }
 
@@ -66,23 +63,14 @@ export class Router {
     // Provider
     provider: Provider;
     // Addresses of each program.
-    addresses?: { [K in keyof Programs]?: Address };
+    addresses?: { [K in keyof Programs]?: PublicKey };
   }): Router {
-    const anchorProvider = new AnchorProvider(
-      provider.connection,
-      provider.wallet,
-      provider.opts
-    );
-
     const allAddresses = { ...PROGRAM_ADDRESSES, ...addresses };
-    const programs: Programs = mapValues(
-      PROGRAM_ADDRESSES,
-      (_: Address, programName: keyof Programs): Program => {
-        const address = allAddresses[programName];
-        const idl = PROGRAM_IDLS[programName];
-        return new Program(idl, address, anchorProvider) as unknown as Program;
-      }
-    ) as unknown as Programs;
+    const programs: Programs = newProgramMap<Programs>(
+      provider,
+      PROGRAM_IDLS,
+      allAddresses
+    );
     return new Router(provider, programs);
   }
 }
