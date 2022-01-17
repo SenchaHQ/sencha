@@ -4,6 +4,7 @@ use crate::{
 };
 use anchor_lang::{prelude::*, Key};
 use vipers::validate::Validate;
+#[allow(deprecated)]
 use vipers::{assert_ata, assert_keys_eq, assert_keys_neq, invariant};
 
 // --------------------------------
@@ -144,6 +145,7 @@ impl<'info> Validate<'info> for Deposit<'info> {
 
 impl<'info> InitSwapToken<'info> {
     /// Validate the init swap.
+    #[allow(deprecated)]
     fn validate_for_swap(&self, swap: Pubkey) -> ProgramResult {
         // We could check token freeze authority presence
         // This ensures the swap will always be functional, since a freeze
@@ -152,6 +154,7 @@ impl<'info> InitSwapToken<'info> {
 
         assert_keys_eq!(self.fees.mint, self.mint, "fees.mint");
         assert_keys_eq!(self.fees.owner, swap, "fees.owner");
+
         assert_ata!(*self.reserve, swap, *self.mint, "reserve");
 
         // ensure the fee and reserve accounts are different
