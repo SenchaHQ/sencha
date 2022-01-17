@@ -1,6 +1,6 @@
 [package]
 name = "cpamm"
-version = "0.9.4"
+version = "0.9.6"
 description = "Sencha constant-product automated market maker."
 edition = "2021"
 homepage = "https://sencha.so"
