@@ -2,8 +2,7 @@
 pkgs.mkShell {
   buildInputs = with pkgs; [
     (import ./ci.nix { inherit pkgs; })
-    solana-cli
-    solana-keygen
+    solana-basic
     cargo-deps
     gh
     spl-token-cli
