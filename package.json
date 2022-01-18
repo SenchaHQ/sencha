@@ -1,6 +1,6 @@
 {
   "name": "@senchahq/sencha-sdk",
-  "version": "0.9.6",
+  "version": "0.9.7",
   "description": "SDK for the Sencha Protocol",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
