@@ -2,7 +2,7 @@ import { utils } from "@project-serum/anchor";
 import { u64 } from "@saberhq/token-utils";
 import { PublicKey } from "@solana/web3.js";
 
-import { PROGRAM_ADDRESSES } from "../..";
+import { comparePubkeys, PROGRAM_ADDRESSES } from "../..";
 
 export const findFactoryAddress = async ({
   base,
@@ -28,12 +28,15 @@ export const findSwapAddress = async ({
   mintB: PublicKey;
   programId?: PublicKey;
 }): Promise<[PublicKey, number]> => {
+  const [token0Mint, token1Mint] =
+    comparePubkeys(mintA, mintB) !== -1 ? [mintB, mintA] : [mintA, mintB];
+
   return await PublicKey.findProgramAddress(
     [
       utils.bytes.utf8.encode("SwapInfo"),
       factory.toBuffer(),
-      mintA.toBuffer(),
-      mintB.toBuffer(),
+      token0Mint.toBuffer(),
+      token1Mint.toBuffer(),
     ],
     programId
   );
