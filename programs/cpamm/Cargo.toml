@@ -23,5 +23,5 @@ default = []
 anchor-lang = ">=0.17.0"
 anchor-spl = ">=0.17.0"
 num-traits = "0.2"
-vipers = "^1.5.7"
+vipers = "^2.0.0"
 xyk = { path = "./lib/xyk", version = "0.1.0" }
