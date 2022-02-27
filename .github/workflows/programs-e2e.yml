@@ -34,7 +34,7 @@ jobs:
         run: nix shell .#ci --command ./scripts/parse-idls.sh
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -120,7 +120,7 @@ jobs:
             ${{ runner.os }}-modules-
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
       - run: yarn install
       - name: Generate IDL types
         run: nix shell .#ci --command yarn idl:generate:nolint
