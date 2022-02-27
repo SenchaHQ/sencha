@@ -7,8 +7,7 @@ mod macros;
 
 use anchor_lang::prelude::*;
 use anchor_spl::token::MintTo;
-use vipers::validate::Validate;
-use vipers::*;
+use vipers::prelude::*;
 
 mod account_structs;
 mod account_validators;
@@ -35,13 +34,13 @@ pub mod cpamm {
 
     /// Creates a new [Factory].
     #[access_control(ctx.accounts.validate())]
-    pub fn new_factory(ctx: Context<NewFactory>, bump: u8) -> ProgramResult {
+    pub fn new_factory(ctx: Context<NewFactory>, _bump: u8) -> Result<()> {
         msg!("Instruction: NewFactory");
 
         let factory = &mut ctx.accounts.factory;
 
         factory.base = ctx.accounts.base.key();
-        factory.bump = bump;
+        factory.bump = *unwrap_int!(ctx.bumps.get("factory"));
         factory.num_swaps = 0;
         factory.admin = addresses::ADMIN_ACCOUNT;
 
@@ -50,19 +49,17 @@ pub mod cpamm {
 
     /// Creates a new [SwapInfo].
     #[access_control(ctx.accounts.validate())]
-    pub fn new_swap(ctx: Context<NewSwap>, bump: u8) -> ProgramResult {
-        msg!("Instruction: NewSwap");
-
+    pub fn new_swap(ctx: Context<NewSwap>, _bump: u8) -> Result<()> {
         let token_0 = &ctx.accounts.token_0;
         let token_1 = &ctx.accounts.token_1;
-        require!(token_0.reserve.amount != 0, NewSwapMustHaveNonZeroSupply);
-        require!(token_1.reserve.amount != 0, NewSwapMustHaveNonZeroSupply);
+        invariant!(token_0.reserve.amount != 0, NewSwapMustHaveNonZeroSupply);
+        invariant!(token_1.reserve.amount != 0, NewSwapMustHaveNonZeroSupply);
 
         let initial_liquidity = unwrap_int!(xyk::calculate_initial_swap_pool_amount(
             token_0.reserve.amount,
             token_1.reserve.amount
         ));
-        require!(
+        invariant!(
             initial_liquidity >= xyk::MINIMUM_LIQUIDITY,
             InitialLiquidityTooLow
         );
@@ -75,7 +72,7 @@ pub mod cpamm {
         // init info
         let swap_info = &mut ctx.accounts.swap;
         swap_info.factory = factory.key();
-        swap_info.bump = bump;
+        swap_info.bump = *unwrap_int!(ctx.bumps.get("swap"));
 
         swap_info.index = index;
         swap_info.admin_key = factory.admin;
@@ -125,15 +122,14 @@ pub mod cpamm {
 
     /// Creates a new [SwapMeta].
     #[access_control(ctx.accounts.validate())]
-    pub fn new_swap_meta(ctx: Context<NewSwapMeta>, bump: u8) -> ProgramResult {
-        msg!("Instruction: NewSwapMeta");
+    pub fn new_swap_meta(ctx: Context<NewSwapMeta>, _bump: u8) -> Result<()> {
         let swap_info = &ctx.accounts.swap;
 
         // init meta
         let meta = &mut ctx.accounts.swap_meta;
         meta.factory = swap_info.factory;
         meta.index = swap_info.index;
-        meta.bump = bump;
+        meta.bump = *unwrap_int!(ctx.bumps.get("swap_meta"));
         meta.swap = swap_info.key();
         meta.created_at = Clock::get()?.unix_timestamp;
         meta.created_by = ctx.accounts.payer.key();
@@ -143,8 +139,7 @@ pub mod cpamm {
 
     /// Performs a swap.
     #[access_control(ctx.accounts.validate())]
-    pub fn swap(ctx: Context<Swap>, amount_in: u64, minimum_amount_out: u64) -> ProgramResult {
-        msg!("Instruction: Swap");
+    pub fn swap(ctx: Context<Swap>, amount_in: u64, minimum_amount_out: u64) -> Result<()> {
         controller::swap::swap(
             ctx,
             controller::swap::SwapArgs {
@@ -157,8 +152,7 @@ pub mod cpamm {
     /// Performs a swap of the maximum amount possible.
     /// This is useful for order routers.
     #[access_control(ctx.accounts.validate())]
-    pub fn swap_max(ctx: Context<Swap>, minimum_amount_out: u64) -> ProgramResult {
-        msg!("Instruction: SwapMax");
+    pub fn swap_max(ctx: Context<Swap>, minimum_amount_out: u64) -> Result<()> {
         let amount_in = ctx.accounts.input.user.amount;
         controller::swap::swap(
             ctx,
@@ -176,8 +170,7 @@ pub mod cpamm {
         amount_in: u64,
         minimum_amount_out_0: u64,
         minimum_amount_out_1: u64,
-    ) -> ProgramResult {
-        msg!("Instruction: Withdraw");
+    ) -> Result<()> {
         controller::withdraw::withdraw(
             ctx,
             controller::withdraw::WithdrawArgs {
@@ -195,8 +188,7 @@ pub mod cpamm {
         pool_token_amount: u64,
         maximum_amount_in_0: u64,
         maximum_amount_in_1: u64,
-    ) -> ProgramResult {
-        msg!("Instruction: Deposit");
+    ) -> Result<()> {
         // update price info
         let price_info = &mut ctx.accounts.user.swap.price_info;
         price_info.update_cumulative_price_info(
@@ -217,7 +209,7 @@ pub mod cpamm {
 }
 
 // Error codes
-#[error]
+#[error_code]
 #[allow(missing_docs)]
 pub enum ErrorCode {
     #[msg("Swap pool is paused")]

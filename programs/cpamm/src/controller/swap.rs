@@ -13,7 +13,7 @@ pub struct SwapArgs {
 }
 
 /// Swap
-pub fn swap(ctx: Context<Swap>, args: SwapArgs) -> ProgramResult {
+pub fn swap(ctx: Context<Swap>, args: SwapArgs) -> Result<()> {
     // update cumulative price info.
     // must be called BEFORE mutation.
     ctx.accounts.update_cumulative_price_info()?;
@@ -101,7 +101,7 @@ pub fn swap(ctx: Context<Swap>, args: SwapArgs) -> ProgramResult {
 }
 
 impl<'info> Swap<'info> {
-    fn update_cumulative_price_info(&mut self) -> ProgramResult {
+    fn update_cumulative_price_info(&mut self) -> Result<()> {
         // update price info
         let swap_info = &mut self.user.swap;
         let (reserve_a, reserve_b) = if self.input.reserve.mint == swap_info.token_0.mint {
@@ -120,7 +120,7 @@ impl<'info> Swap<'info> {
         &mut self,
         swap_result: &SwapResult,
         trade_fee: u64,
-    ) -> ProgramResult {
+    ) -> Result<()> {
         // record cumulative volume numbers
         let token_0_mint = self.user.swap.token_0.mint;
         let swap_info = &mut self.user.swap;

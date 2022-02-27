@@ -14,7 +14,7 @@ pub struct WithdrawArgs {
 }
 
 /// Withdraw
-pub fn withdraw(ctx: Context<Withdraw>, args: WithdrawArgs) -> ProgramResult {
+pub fn withdraw(ctx: Context<Withdraw>, args: WithdrawArgs) -> Result<()> {
     // update cumulative price info.
     // we call this before the short circuit
     // so the numbers are accurate.
@@ -93,7 +93,7 @@ pub fn withdraw(ctx: Context<Withdraw>, args: WithdrawArgs) -> ProgramResult {
 }
 
 impl<'info> Withdraw<'info> {
-    fn update_cumulative_price_info(&mut self) -> ProgramResult {
+    fn update_cumulative_price_info(&mut self) -> Result<()> {
         // update price info
         let price_info = &mut self.user.swap.price_info;
         price_info.update_cumulative_price_info(
@@ -108,7 +108,7 @@ impl<'info> Withdraw<'info> {
         pool_token_amount: u64,
         token_0_amount: u64,
         token_1_amount: u64,
-    ) -> ProgramResult {
+    ) -> Result<()> {
         // record cumulative volume numbers
         let cumulative_stats = &mut self.user.swap.cumulative_stats;
         cumulative_stats.total_lp_redeemed = unwrap_int!(cumulative_stats
@@ -126,7 +126,7 @@ impl<'info> Withdraw<'info> {
     }
 
     /// Withdraws a token.
-    fn withdraw_token(&self, output: &SwapTokenWithFees<'info>, amount: u64) -> ProgramResult {
+    fn withdraw_token(&self, output: &SwapTokenWithFees<'info>, amount: u64) -> Result<()> {
         let token_swap = &self.user.swap;
         let token_program = &self.user.token_program;
 

@@ -5,7 +5,6 @@ use anchor_spl::token::{Mint, Token, TokenAccount};
 
 /// Accounts for a [cpamm::new_factory] instruction.
 #[derive(Accounts)]
-#[instruction(bump: u8)]
 pub struct NewFactory<'info> {
     /// Base key to create the [Factory].
     pub base: Signer<'info>,
@@ -14,10 +13,10 @@ pub struct NewFactory<'info> {
     #[account(
         init,
         seeds = [
-            b"Factory",
+            b"Factory".as_ref(),
             base.key().as_ref()
         ],
-        bump = bump,
+        bump,
         payer = payer
     )]
     pub factory: Box<Account<'info, Factory>>,
@@ -32,7 +31,6 @@ pub struct NewFactory<'info> {
 
 /// Accounts for a [cpamm::new_swap] instruction.
 #[derive(Accounts)]
-#[instruction(bump: u8)]
 pub struct NewSwap<'info> {
     /// The [Factory].
     #[account(mut)]
@@ -42,12 +40,12 @@ pub struct NewSwap<'info> {
     #[account(
         init,
         seeds = [
-            b"SwapInfo",
+            b"SwapInfo".as_ref(),
             factory.key().to_bytes().as_ref(),
             token_0.mint.key().to_bytes().as_ref(),
             token_1.mint.key().to_bytes().as_ref()
         ],
-        bump = bump,
+        bump,
         payer = payer
     )]
     pub swap: Box<Account<'info, SwapInfo>>,
@@ -77,7 +75,6 @@ pub struct NewSwap<'info> {
 
 /// Accounts for a [cpamm::new_swap_meta] instruction.
 #[derive(Accounts)]
-#[instruction(bump: u8)]
 pub struct NewSwapMeta<'info> {
     /// The swap account
     pub swap: Box<Account<'info, SwapInfo>>,
@@ -86,11 +83,11 @@ pub struct NewSwapMeta<'info> {
     #[account(
         init,
         seeds = [
-            b"SwapMeta",
+            b"SwapMeta".as_ref(),
             swap.factory.to_bytes().as_ref(),
             swap.index.to_le_bytes().as_ref()
         ],
-        bump = bump,
+        bump,
         payer = payer
     )]
     pub swap_meta: Box<Account<'info, SwapMeta>>,
