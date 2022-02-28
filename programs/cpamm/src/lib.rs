@@ -35,8 +35,6 @@ pub mod cpamm {
     /// Creates a new [Factory].
     #[access_control(ctx.accounts.validate())]
     pub fn new_factory(ctx: Context<NewFactory>, _bump: u8) -> Result<()> {
-        msg!("Instruction: NewFactory");
-
         let factory = &mut ctx.accounts.factory;
 
         factory.base = ctx.accounts.base.key();
