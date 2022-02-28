@@ -8,7 +8,7 @@ use vipers::invariant;
 use vipers::unwrap_int;
 
 /// Deposit
-pub fn deposit(ctx: Context<Deposit>, args: DepositArgs) -> ProgramResult {
+pub fn deposit(ctx: Context<Deposit>, args: DepositArgs) -> Result<()> {
     // update cumulative price info.
     // we call this before the short circuit
     // so the numbers are accurate.
@@ -76,7 +76,7 @@ pub struct DepositArgs {
 
 impl<'info> Deposit<'info> {
     /// Transfers the user's swap tokens to the reserve.
-    fn transfer_user_to_reserve(&self, input: &SwapToken<'info>, amount: u64) -> ProgramResult {
+    fn transfer_user_to_reserve(&self, input: &SwapToken<'info>, amount: u64) -> Result<()> {
         let token_program = &self.user.token_program;
         let cpi_ctx = CpiContext::new(
             token_program.to_account_info().clone(),
@@ -90,7 +90,7 @@ impl<'info> Deposit<'info> {
     }
 
     /// Mints the LP tokens to the user.
-    fn mint_lp_to_user(&self, amount: u64) -> ProgramResult {
+    fn mint_lp_to_user(&self, amount: u64) -> Result<()> {
         let token_swap = &self.user.swap;
         let seeds = gen_swap_signer_seeds!(token_swap);
         let signer_seeds = &[&seeds[..]];
@@ -108,7 +108,7 @@ impl<'info> Deposit<'info> {
         )
     }
 
-    fn update_cumulative_price_info(&mut self) -> ProgramResult {
+    fn update_cumulative_price_info(&mut self) -> Result<()> {
         // update price info
         let price_info = &mut self.user.swap.price_info;
         price_info
@@ -121,7 +121,7 @@ impl<'info> Deposit<'info> {
         pool_token_amount: u64,
         token_0_amount: u64,
         token_1_amount: u64,
-    ) -> ProgramResult {
+    ) -> Result<()> {
         // record cumulative volume numbers
         let cumulative_stats = &mut self.user.swap.cumulative_stats;
         cumulative_stats.total_lp_minted = unwrap_int!(cumulative_stats

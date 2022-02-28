@@ -1,24 +1,21 @@
+use crate::*;
 use crate::{
     Deposit, InitSwapToken, NewFactory, NewSwap, NewSwapMeta, Swap, SwapToken, SwapTokenInfo,
     SwapTokenWithFees, SwapUserContext, Withdraw,
 };
-use anchor_lang::{prelude::*, Key};
-use vipers::validate::Validate;
-#[allow(deprecated)]
-use vipers::{assert_ata, assert_keys_eq, assert_keys_neq, invariant};
 
 // --------------------------------
 // Instruction account structs
 // --------------------------------
 
 impl<'info> Validate<'info> for NewFactory<'info> {
-    fn validate(&self) -> ProgramResult {
+    fn validate(&self) -> Result<()> {
         Ok(())
     }
 }
 
 impl<'info> Validate<'info> for NewSwap<'info> {
-    fn validate(&self) -> ProgramResult {
+    fn validate(&self) -> Result<()> {
         let pool_mint_decimals = self.token_0.mint.decimals.max(self.token_1.mint.decimals);
 
         // pool mint belongs to swap
@@ -58,14 +55,14 @@ impl<'info> Validate<'info> for NewSwap<'info> {
 }
 
 impl<'info> Validate<'info> for NewSwapMeta<'info> {
-    fn validate(&self) -> ProgramResult {
+    fn validate(&self) -> Result<()> {
         // nothing to validate
         Ok(())
     }
 }
 
 impl<'info> Validate<'info> for SwapUserContext<'info> {
-    fn validate(&self) -> ProgramResult {
+    fn validate(&self) -> Result<()> {
         // ensure no self-dealing
         assert_keys_neq!(self.user_authority, self.swap);
         require!(!self.swap.is_paused, Paused);
@@ -74,7 +71,7 @@ impl<'info> Validate<'info> for SwapUserContext<'info> {
 }
 
 impl<'info> Validate<'info> for Swap<'info> {
-    fn validate(&self) -> ProgramResult {
+    fn validate(&self) -> Result<()> {
         self.user.validate()?;
 
         // inner validation will ensure that token source mint equals respective reserve
@@ -99,7 +96,7 @@ impl<'info> Validate<'info> for Swap<'info> {
 }
 
 impl<'info> Validate<'info> for Withdraw<'info> {
-    fn validate(&self) -> ProgramResult {
+    fn validate(&self) -> Result<()> {
         self.user.validate()?;
 
         assert_keys_eq!(self.pool_mint, self.user.swap.pool_mint, "pool_mint");
@@ -113,7 +110,7 @@ impl<'info> Validate<'info> for Withdraw<'info> {
 }
 
 impl<'info> Validate<'info> for Deposit<'info> {
-    fn validate(&self) -> ProgramResult {
+    fn validate(&self) -> Result<()> {
         self.user.validate()?;
 
         // input_a, input_b should check their equal mints
@@ -146,7 +143,7 @@ impl<'info> Validate<'info> for Deposit<'info> {
 impl<'info> InitSwapToken<'info> {
     /// Validate the init swap.
     #[allow(deprecated)]
-    fn validate_for_swap(&self, swap: Pubkey) -> ProgramResult {
+    fn validate_for_swap(&self, swap: Pubkey) -> Result<()> {
         // We could check token freeze authority presence
         // This ensures the swap will always be functional, since a freeze
         // would prevent the swap from working.
@@ -155,7 +152,7 @@ impl<'info> InitSwapToken<'info> {
         assert_keys_eq!(self.fees.mint, self.mint, "fees.mint");
         assert_keys_eq!(self.fees.owner, swap, "fees.owner");
 
-        assert_ata!(*self.reserve, swap, *self.mint, "reserve");
+        vipers::assert_ata!(*self.reserve, swap, *self.mint, "reserve");
 
         // ensure the fee and reserve accounts are different
         // otherwise protocol fees would accrue to the LP holders
@@ -165,7 +162,7 @@ impl<'info> InitSwapToken<'info> {
 }
 
 impl<'info> SwapToken<'info> {
-    fn validate_for_swap(&self, swap_info: &SwapTokenInfo) -> ProgramResult {
+    fn validate_for_swap(&self, swap_info: &SwapTokenInfo) -> Result<()> {
         assert_keys_eq!(self.reserve, swap_info.reserves, "reserve");
         assert_keys_eq!(self.user.mint, swap_info.mint, "user.mint");
 
@@ -177,7 +174,7 @@ impl<'info> SwapToken<'info> {
 }
 
 impl<'info> SwapTokenWithFees<'info> {
-    fn validate_for_swap(&self, swap_info: &SwapTokenInfo) -> ProgramResult {
+    fn validate_for_swap(&self, swap_info: &SwapTokenInfo) -> Result<()> {
         assert_keys_eq!(self.fees, swap_info.admin_fees, "fees");
         assert_keys_eq!(self.reserve, swap_info.reserves, "reserve");
         assert_keys_eq!(self.user.mint, swap_info.mint, "user.mint");

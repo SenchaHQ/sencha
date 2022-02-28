@@ -29,11 +29,7 @@ impl SwapPriceInfo {
     /// Updates the cumulative price information.
     /// This should be called before the pool is mutated.
     /// Taken from <https://github.com/Uniswap/v2-core/blob/master/contracts/UniswapV2Pair.sol>.
-    pub fn update_cumulative_price_info(
-        &mut self,
-        reserve_0: u64,
-        reserve_1: u64,
-    ) -> ProgramResult {
+    pub fn update_cumulative_price_info(&mut self, reserve_0: u64, reserve_1: u64) -> Result<()> {
         let now = Clock::get()?.unix_timestamp;
         if self.last_update_ts > now || reserve_0 == 0 || reserve_1 == 0 {
             return Ok(());
