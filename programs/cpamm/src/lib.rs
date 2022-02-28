@@ -40,7 +40,7 @@ pub mod cpamm {
         let factory = &mut ctx.accounts.factory;
 
         factory.base = ctx.accounts.base.key();
-        factory.bump = *unwrap_int!(ctx.bumps.get("factory"));
+        factory.bump = unwrap_bump!(ctx, "factory");
         factory.num_swaps = 0;
         factory.admin = addresses::ADMIN_ACCOUNT;
 
@@ -72,7 +72,7 @@ pub mod cpamm {
         // init info
         let swap_info = &mut ctx.accounts.swap;
         swap_info.factory = factory.key();
-        swap_info.bump = *unwrap_int!(ctx.bumps.get("swap"));
+        swap_info.bump = unwrap_bump!(ctx, "swap");
 
         swap_info.index = index;
         swap_info.admin_key = factory.admin;
@@ -129,7 +129,7 @@ pub mod cpamm {
         let meta = &mut ctx.accounts.swap_meta;
         meta.factory = swap_info.factory;
         meta.index = swap_info.index;
-        meta.bump = *unwrap_int!(ctx.bumps.get("swap_meta"));
+        meta.bump = unwrap_bump!(ctx, "swap_meta");
         meta.swap = swap_info.key();
         meta.created_at = Clock::get()?.unix_timestamp;
         meta.created_by = ctx.accounts.payer.key();

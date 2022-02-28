@@ -1,4 +1,4 @@
-import { Coder } from "@project-serum/anchor";
+import { BorshCoder } from "@project-serum/anchor";
 import type { KeyedAccountInfo } from "@solana/web3.js";
 
 import type {
@@ -10,7 +10,7 @@ import { CpammJSON } from "../../programs/cpAmm";
 
 export type AccountParser<T> = (d: KeyedAccountInfo) => T;
 
-export const SENCHA_CPAMM_CODER = new Coder(CpammJSON);
+export const SENCHA_CPAMM_CODER = new BorshCoder(CpammJSON);
 
 export const PARSE_SWAP_INFO: AccountParser<SwapInfoData> = (
   d: KeyedAccountInfo
