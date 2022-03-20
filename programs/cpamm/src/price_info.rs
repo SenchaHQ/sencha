@@ -2,11 +2,8 @@
 //! This is based on the Uniswap V2 TWAP oracle solution.
 #![deny(missing_docs)]
 
-use anchor_lang::prelude::*;
+use crate::*;
 use num_traits::ToPrimitive;
-use vipers::unwrap_int;
-
-use crate::SwapPriceInfo;
 
 /// Scale of a price.
 pub const PRICE_SCALE: u8 = 18;

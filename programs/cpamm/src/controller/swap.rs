@@ -1,10 +1,7 @@
 //! [crate::cpamm::swap] instruction controller.
 
-use anchor_lang::prelude::*;
+use crate::*;
 use anchor_spl::token;
-use vipers::unwrap_int;
-
-use crate::{Swap, SwapEvent};
 use xyk::SwapResult;
 
 pub struct SwapArgs {

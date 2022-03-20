@@ -1,10 +1,8 @@
 //! Fees.
 #![deny(missing_docs)]
 
-use anchor_lang::prelude::*;
-use num_traits::ToPrimitive;
-
-use crate::SwapFees;
+use crate::*;
+use ::u128::mul_div_u64;
 
 /// Thousands of BPS in 100%.
 pub const KBPS_PER_WHOLE: u64 = 10_000_000;
@@ -32,30 +30,23 @@ impl SwapFees {
 
     /// Compute trade and admin trade fee from the trade amount
     pub fn compute_trade_fees(&self, destination_amount_swapped: u64) -> Option<(u64, u64)> {
-        let trade_fee = (destination_amount_swapped as u128)
-            .checked_mul(self.trade_fee_kbps.into())?
-            .checked_div(KBPS_PER_WHOLE.into())?
-            .to_u64()?;
+        let trade_fee = mul_div_u64(
+            destination_amount_swapped,
+            self.trade_fee_kbps,
+            KBPS_PER_WHOLE,
+        )?;
 
-        let admin_trade_fee = (trade_fee as u128)
-            .checked_mul(self.admin_trade_fee_kbps.into())?
-            .checked_div(KBPS_PER_WHOLE.into())?
-            .to_u64()?;
+        let admin_trade_fee = mul_div_u64(trade_fee, self.admin_trade_fee_kbps, KBPS_PER_WHOLE)?;
 
         Some((trade_fee, admin_trade_fee))
     }
 
     /// Compute withdraw and admin withdraw fees from the withdrawal amount
     pub fn compute_withdraw_fees(&self, withdrawal_amount: u64) -> Option<(u64, u64)> {
-        let withdraw_fee = (withdrawal_amount as u128)
-            .checked_mul(self.withdraw_fee_kbps.into())?
-            .checked_div(KBPS_PER_WHOLE.into())?
-            .to_u64()?;
+        let withdraw_fee = mul_div_u64(withdrawal_amount, self.withdraw_fee_kbps, KBPS_PER_WHOLE)?;
 
-        let admin_withdraw_fee = (withdraw_fee as u128)
-            .checked_mul(self.admin_withdraw_fee_kbps.into())?
-            .checked_div(KBPS_PER_WHOLE.into())?
-            .to_u64()?;
+        let admin_withdraw_fee =
+            mul_div_u64(withdraw_fee, self.admin_withdraw_fee_kbps, KBPS_PER_WHOLE)?;
 
         Some((withdraw_fee, admin_withdraw_fee))
     }
