@@ -149,24 +149,27 @@ impl<'info> InitSwapToken<'info> {
         // would prevent the swap from working.
         // We do not think this is necessary to add.
 
-        assert_keys_eq!(self.fees.mint, self.mint, "fees.mint");
-        assert_keys_eq!(self.fees.owner, swap, "fees.owner");
+        assert_keys_eq!(self.fees.mint, self.mint);
+        assert_keys_eq!(self.fees.owner, swap);
+        invariant!(self.fees.delegate.is_none());
+        invariant!(self.fees.close_authority.is_none());
 
-        vipers::assert_ata!(self.reserve, swap, self.mint);
         assert_keys_eq!(self.reserve.mint, self.mint);
         assert_keys_eq!(self.reserve.owner, swap);
+        invariant!(self.reserve.delegate.is_none());
+        invariant!(self.reserve.close_authority.is_none());
 
         // ensure the fee and reserve accounts are different
         // otherwise protocol fees would accrue to the LP holders
-        assert_keys_neq!(self.fees, self.reserve, "fees cannot equal reserve");
+        assert_keys_neq!(self.fees, self.reserve);
         Ok(())
     }
 }
 
 impl<'info> SwapToken<'info> {
     fn validate_for_swap(&self, swap_info: &SwapTokenInfo) -> Result<()> {
-        assert_keys_eq!(self.reserve, swap_info.reserves, "reserve");
-        assert_keys_eq!(self.user.mint, swap_info.mint, "user.mint");
+        assert_keys_eq!(self.reserve, swap_info.reserves);
+        assert_keys_eq!(self.user.mint, swap_info.mint);
 
         // ensure no self-dealing
         assert_keys_neq!(self.reserve, self.user, "user cannot be reserve account");
