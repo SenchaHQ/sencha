@@ -1,11 +1,7 @@
 //! [crate::cpamm::deposit] instruction controller.
 
-use crate::SwapToken;
-use crate::{Deposit, DepositEvent};
-use anchor_lang::prelude::*;
+use crate::*;
 use anchor_spl::token;
-use vipers::invariant;
-use vipers::unwrap_int;
 
 /// Deposit
 pub fn deposit(ctx: Context<Deposit>, args: DepositArgs) -> Result<()> {
@@ -32,16 +28,16 @@ pub fn deposit(ctx: Context<Deposit>, args: DepositArgs) -> Result<()> {
         xyk::RoundDirection::Ceiling,
     ));
 
-    require!(
+    invariant!(
         result.token_a_amount <= args.maximum_amount_in_0,
         ExceededSlippage
     );
-    require!(result.token_a_amount > 0, InsufficientLiquidity);
-    require!(
+    invariant!(result.token_a_amount > 0, InsufficientLiquidity);
+    invariant!(
         result.token_b_amount <= args.maximum_amount_in_1,
         ExceededSlippage
     );
-    require!(result.token_b_amount > 0, InsufficientLiquidity);
+    invariant!(result.token_b_amount > 0, InsufficientLiquidity);
 
     // Transfer user's tokens to the reserve.
     ctx.accounts

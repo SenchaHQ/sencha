@@ -152,7 +152,9 @@ impl<'info> InitSwapToken<'info> {
         assert_keys_eq!(self.fees.mint, self.mint, "fees.mint");
         assert_keys_eq!(self.fees.owner, swap, "fees.owner");
 
-        vipers::assert_ata!(*self.reserve, swap, *self.mint, "reserve");
+        vipers::assert_ata!(self.reserve, swap, self.mint);
+        assert_keys_eq!(self.reserve.mint, self.mint);
+        assert_keys_eq!(self.reserve.owner, swap);
 
         // ensure the fee and reserve accounts are different
         // otherwise protocol fees would accrue to the LP holders
