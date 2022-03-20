@@ -1,5 +1,6 @@
 //! The constant product invariant calculator.
 
+use ::u128::mul_div_u64;
 use num_traits::ToPrimitive;
 use spl_math::checked_ceil_div::CheckedCeilDiv;
 
@@ -68,14 +69,8 @@ pub fn pool_tokens_to_trading_tokens(
     swap_token_b_amount: u64,
     round_direction: RoundDirection,
 ) -> Option<TradingTokenResult> {
-    let mut token_a_amount = (pool_tokens as u128)
-        .checked_mul(swap_token_a_amount.into())?
-        .checked_div(pool_token_supply.into())?
-        .to_u64()?;
-    let mut token_b_amount = (pool_tokens as u128)
-        .checked_mul(swap_token_b_amount.into())?
-        .checked_div(pool_token_supply.into())?
-        .to_u64()?;
+    let mut token_a_amount = mul_div_u64(pool_tokens, swap_token_a_amount, pool_token_supply)?;
+    let mut token_b_amount = mul_div_u64(pool_tokens, swap_token_b_amount, pool_token_supply)?;
     let (token_a_amount, token_b_amount) = match round_direction {
         RoundDirection::Floor => (token_a_amount, token_b_amount),
         RoundDirection::Ceiling => {
