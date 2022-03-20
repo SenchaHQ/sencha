@@ -30,6 +30,11 @@ pub fn swap(ctx: Context<Swap>, args: SwapArgs) -> Result<()> {
         return Ok(());
     }
 
+    invariant!(
+        swap_result.destination_amount_swapped >= args.minimum_amount_out,
+        ExceededSlippage
+    );
+
     let (trade_fee, admin_trade_fee) =
         unwrap_int!(swap_fees.compute_trade_fees(swap_result.destination_amount_swapped));
 
