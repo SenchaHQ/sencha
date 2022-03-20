@@ -18,7 +18,7 @@ pub const INITIAL: SwapFees = SwapFees {
 impl SwapFees {
     /// Validates the fees.
     pub fn validate(&self) -> Result<()> {
-        require!(
+        invariant!(
             self.trade_fee_kbps <= KBPS_PER_WHOLE
                 && self.withdraw_fee_kbps <= KBPS_PER_WHOLE
                 && self.admin_trade_fee_kbps <= KBPS_PER_WHOLE

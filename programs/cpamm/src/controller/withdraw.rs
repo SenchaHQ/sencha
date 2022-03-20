@@ -1,10 +1,8 @@
 //! [crate::cpamm::withdraw] instruction processor.
 
-use anchor_lang::prelude::*;
+use crate::*;
 use anchor_spl::token;
-use vipers::unwrap_int;
 
-use crate::{SwapTokenWithFees, Withdraw, WithdrawEvent};
 use xyk::{pool_tokens_to_trading_tokens, RoundDirection};
 
 pub struct WithdrawArgs {
@@ -37,15 +35,15 @@ pub fn withdraw(ctx: Context<Withdraw>, args: WithdrawArgs) -> Result<()> {
     let token_1_amount = std::cmp::min(ctx.accounts.output_1.reserve.amount, result.token_b_amount);
 
     // pool token output should be at least 1 for each token
-    require!(token_0_amount > 0, InsufficientLiquidity);
-    require!(token_1_amount > 0, InsufficientLiquidity);
+    invariant!(token_0_amount > 0, InsufficientLiquidity);
+    invariant!(token_1_amount > 0, InsufficientLiquidity);
 
     // ensure we are meeting the max slippage
-    require!(
+    invariant!(
         token_0_amount >= args.minimum_amount_out_0,
         ExceededSlippage
     );
-    require!(
+    invariant!(
         token_1_amount >= args.minimum_amount_out_1,
         ExceededSlippage
     );
@@ -84,7 +82,7 @@ pub fn withdraw(ctx: Context<Withdraw>, args: WithdrawArgs) -> Result<()> {
     )?;
 
     ctx.accounts.pool_mint.reload()?;
-    require!(
+    invariant!(
         ctx.accounts.pool_mint.supply >= xyk::MINIMUM_LIQUIDITY,
         InsufficientLiquidityPostWithdrawal
     );
