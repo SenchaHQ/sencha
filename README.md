@@ -20,11 +20,11 @@ We're in active development. For the latest updates, please join our community:
 
 ## Packages
 
-| Package                | Description                                      | Version                                                                                                             | Docs                                                                                  |
-| :--------------------- | :----------------------------------------------- | :------------------------------------------------------------------------------------------------------------------ | :------------------------------------------------------------------------------------ |
-| `cpamm`                | Constant product automated market maker.         | [![Crates.io](https://img.shields.io/crates/v/cpamm)](https://crates.io/crates/cpamm)                               | [![Docs.rs](https://docs.rs/cpamm/badge.svg)](https://docs.rs/cpamm)                  |
-| `xyk`                  | Constant product AMM calculator used for Sencha. | [![Crates.io](https://img.shields.io/crates/v/xyk)](https://crates.io/crates/xyk)                                   | [![Docs.rs](https://docs.rs/xyk/badge.svg)](https://docs.rs/xyk)                      |
-| `@senchahq/sencha-sdk` | TypeScript SDK for Sencha                        | [![npm](https://img.shields.io/npm/v/@senchahq/sencha-sdk.svg)](https://www.npmjs.com/package/@senchahq/sencha-sdk) | [![Docs](https://img.shields.io/badge/docs-typedoc-blue)](https://docs.sencha.so/ts/) |
+| Package                | Description                                      | Version                                                                                                             | Docs                                                                             |
+| :--------------------- | :----------------------------------------------- | :------------------------------------------------------------------------------------------------------------------ | :------------------------------------------------------------------------------- |
+| `cpamm`                | Constant product automated market maker.         | [![Crates.io](https://img.shields.io/crates/v/cpamm)](https://crates.io/crates/cpamm)                               | [![Docs.rs](https://docs.rs/cpamm/badge.svg)](https://docs.rs/cpamm)             |
+| `xyk`                  | Constant product AMM calculator used for Sencha. | [![Crates.io](https://img.shields.io/crates/v/xyk)](https://crates.io/crates/xyk)                                   | [![Docs.rs](https://docs.rs/xyk/badge.svg)](https://docs.rs/xyk)                 |
+| `@senchahq/sencha-sdk` | TypeScript SDK for Sencha                        | [![npm](https://img.shields.io/npm/v/@senchahq/sencha-sdk.svg)](https://www.npmjs.com/package/@senchahq/sencha-sdk) | [![Docs](https://img.shields.io/badge/docs-typedoc-blue)](http://sdk.sencha.so/) |
 
 ## Addresses
 
