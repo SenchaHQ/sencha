@@ -1,6 +1,6 @@
 [package]
 name = "xyk"
-version = "0.1.0"
+version = "0.10.1"
 description = "Constant product AMM calculator used for Sencha."
 edition = "2018"
 homepage = "https://sencha.so"
