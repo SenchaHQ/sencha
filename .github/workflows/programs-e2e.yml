@@ -106,8 +106,6 @@ jobs:
       # Run build
       - name: Build program
         run: anchor build
-      - name: Download programs
-        run: ./scripts/download-programs.sh
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
