@@ -2,7 +2,7 @@
 
 use crate::*;
 use anchor_spl::token::{Mint, Token, TokenAccount};
-
+use std::mem::size_of;
 /// Accounts for a [cpamm::new_factory] instruction.
 #[derive(Accounts)]
 pub struct NewFactory<'info> {
@@ -17,6 +17,7 @@ pub struct NewFactory<'info> {
             base.key().as_ref()
         ],
         bump,
+        space = size_of::<Factory>() + 8,
         payer = payer
     )]
     pub factory: Box<Account<'info, Factory>>,
@@ -46,6 +47,7 @@ pub struct NewSwap<'info> {
             token_1.mint.key().to_bytes().as_ref()
         ],
         bump,
+        space = size_of::<SwapInfo>() + 8,
         payer = payer
     )]
     pub swap: Box<Account<'info, SwapInfo>>,
@@ -88,6 +90,7 @@ pub struct NewSwapMeta<'info> {
             swap.index.to_le_bytes().as_ref()
         ],
         bump,
+        space = size_of::<SwapMeta>() + 8,
         payer = payer
     )]
     pub swap_meta: Box<Account<'info, SwapMeta>>,
