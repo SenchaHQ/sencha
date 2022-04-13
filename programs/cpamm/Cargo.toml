@@ -21,7 +21,7 @@ default = []
 
 [dependencies]
 anchor-lang = "^0.22"
-anchor-spl = "^0.22"
+anchor-spl = "^0.24"
 num-traits = "0.2"
 u128 = "0.1"
 vipers = { version = "^2.0", features = ["spl-associated-token-account"] }
