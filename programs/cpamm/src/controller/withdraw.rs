@@ -55,7 +55,7 @@ pub fn withdraw(ctx: Context<Withdraw>, args: WithdrawArgs) -> Result<()> {
             token_program.to_account_info(),
             token::Burn {
                 mint: ctx.accounts.pool_mint.to_account_info(),
-                to: ctx.accounts.input_lp.to_account_info(),
+                from: ctx.accounts.input_lp.to_account_info(),
                 authority: ctx.accounts.user.user_authority.to_account_info(),
             },
         ),

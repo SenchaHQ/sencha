@@ -1,28 +1,28 @@
 [package]
-name = "cpamm"
-version = "0.10.1"
+authors = ["Johanna Johansson <jj@sencha.so>"]
 description = "Sencha constant-product automated market maker."
 edition = "2021"
 homepage = "https://sencha.so"
-repository = "https://github.com/SenchaHQ/sencha"
-authors = ["Johanna Johansson <jj@sencha.so>"]
-license = "AGPL-3.0"
 keywords = ["solana", "anchor", "amm", "sencha", "swap"]
+license = "AGPL-3.0"
+name = "cpamm"
+repository = "https://github.com/SenchaHQ/sencha"
+version = "0.10.1"
 
 [lib]
 crate-type = ["cdylib", "lib"]
 name = "cpamm"
 
 [features]
-no-entrypoint = []
-no-idl = []
 cpi = ["no-entrypoint"]
 default = []
+no-entrypoint = []
+no-idl = []
 
 [dependencies]
-anchor-lang = "^0.22"
-anchor-spl = "^0.22"
+anchor-lang = "^0.24"
+anchor-spl = "^0.24"
 num-traits = "0.2"
 u128 = "0.1"
-vipers = { version = "^2.0", features = ["spl-associated-token-account"] }
-xyk = { path = "./lib/xyk", version = "0.10.1" }
+vipers = {version = "^2.0.2", features = ["spl-associated-token-account"]}
+xyk = {path = "./lib/xyk", version = "0.10.1"}
