@@ -20,8 +20,8 @@ no-entrypoint = []
 no-idl = []
 
 [dependencies]
-anchor-lang = "^0.23"
-anchor-spl = "^0.23"
+anchor-lang = "^0.24"
+anchor-spl = "^0.24"
 num-traits = "0.2"
 u128 = "0.1"
 vipers = {version = "^2.0.2", features = ["spl-associated-token-account"]}
