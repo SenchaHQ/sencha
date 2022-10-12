@@ -24,7 +24,7 @@ jobs:
       # Install Cachix
       - uses: cachix/install-nix-action@v16
       - name: Setup Cachix
-        uses: cachix/cachix-action@v10
+        uses: cachix/cachix-action@v11
         with:
           name: matcha
           extraPullNames: saber
@@ -67,7 +67,7 @@ jobs:
       # Install Cachix
       - uses: cachix/install-nix-action@v16
       - name: Setup Cachix
-        uses: cachix/cachix-action@v10
+        uses: cachix/cachix-action@v11
         with:
           name: matcha
           extraPullNames: saber
