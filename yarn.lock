@@ -318,7 +318,7 @@ __metadata:
     "@types/lodash.chunk": ^4.2.6
     "@types/lodash.zip": ^4.2.6
     "@types/mocha": ^9.1.0
-    "@types/node": ^16.11.26
+    "@types/node": ^18.11.12
     bn.js: ^5.2.0
     chai: =4.3.4
     eslint: ^8.11.0
@@ -606,10 +606,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^16.11.26":
-  version: 16.11.26
-  resolution: "@types/node@npm:16.11.26"
-  checksum: 57757caaba3f0d95de82198cb276a1002c49b710108c932a1d02d7c91ff2fa57cfe2dd19fde60853b6dd90b0964b3cf35557981d2628e20aed6a909057aedfe6
+"@types/node@npm:^18.11.12":
+  version: 18.11.12
+  resolution: "@types/node@npm:18.11.12"
+  checksum: 6c67f0998a9ad8ef0f357fcc0d72841c579576c746cfbac67c9d0229e1cd219d3b96297c2caaeaa4084ba7e9ad112b412e64af4066e522faa0be4ef9ad0a613a
   languageName: node
   linkType: hard
 
